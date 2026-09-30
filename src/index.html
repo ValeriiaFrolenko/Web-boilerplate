@@ -1,21 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 
-   <head itemscope itemtype="http://schema.org/WebSite">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Teacherinder — find a teacher anywhere in the world</title>
+  <meta name="description" content="Teacherinder is a platform for finding teachers all over the world.">
+  <link rel="stylesheet" href="./css/app.css">
+</head>
 
-      <meta charset="utf-8">
-      <meta http-equiv="x-ua-compatible" content="ie=edge">
-      <meta name="msapplication-tap-highlight" content="no">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+<body>
 
-      <title>Project</title>
+<div class="sheet">
 
-      <link rel="stylesheet" href="./css/app.css">
+  <header class="header">
+    <div class="wrap">
 
-   </head>
+      <div class="header__top">
+        <a class="logo" href="#top"><span class="logo__text" data-text="Teacherinder">Teacherinder</span></a>
 
-   <body itemscope itemtype="http://schema.org/WebPage">
-      <script type="text/javascript" src="./js/app.js"></script>
-      
-  </body>
+        <form class="search" action="#">
+          <input class="search__input" type="search" name="q" placeholder="Name, note or age to search">
+          <button class="btn" type="submit">Search</button>
+        </form>
+      </div>
+
+      <div class="header__nav">
+        <nav class="nav">
+          <a class="nav__link" href="#teachers">Teachers</a>
+          <a class="nav__link" href="#statistics">Statistics</a>
+          <a class="nav__link" href="#favorites">Favorites</a>
+          <a class="nav__link" href="#about">About</a>
+        </nav>
+        <a class="btn btn--wide" href="#add-teacher">Add teacher</a>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <main id="top">
+
+    <section class="section section--teachers" id="teachers">
+      <div class="wrap">
+        <h1 class="section__title">Top Teachers</h1>
+
+        <form class="filters" action="#">
+          <div class="filters__group">
+            <label class="filters__label" for="filter-age">Age</label>
+            <select class="filters__select" id="filter-age">
+              <option>18-31</option>
+              <option>32-45</option>
+              <option>46-60</option>
+            </select>
+          </div>
+
+          <div class="filters__group">
+            <label class="filters__label" for="filter-region">Region</label>
+            <select class="filters__select" id="filter-region">
+              <option>Europe</option>
+              <option>Asia</option>
+              <option>America</option>
+            </select>
+          </div>
+
+          <div class="filters__group">
+            <label class="filters__label" for="filter-sex">Sex</label>
+            <select class="filters__select" id="filter-sex">
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
+
+          <div class="filters__group filters__group--check">
+            <label class="filters__check"><input type="checkbox"> Only with photo</label>
+          </div>
+
+          <div class="filters__group filters__group--check">
+            <label class="filters__check filters__check--strong"><input type="checkbox"> Only favorites</label>
+          </div>
+        </form>
+
+        <ul class="cards">
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-ihor-tkachuk.jpg" alt="Ihor Tkachuk" width="150" height="150">
+              <span class="card__name">Ihor<br>Tkachuk</span>
+              <span class="card__speciality">Chemistry</span>
+              <span class="card__country">Ukraine</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-pragg-rameshababu.jpg" alt="Pragg Rameshababu" width="150" height="150">
+              <span class="card__name">Pragg<br>Rameshababu</span>
+              <span class="card__speciality">Chess</span>
+              <span class="card__country">India</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-floor-jansen.jpg" alt="Floor Jansen" width="150" height="150">
+              <span class="card__star" aria-hidden="true"></span>
+              <span class="card__name">Floor<br>Jansen</span>
+              <span class="card__speciality">Vocal</span>
+              <span class="card__country">Denmark</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-john-burke.jpg" alt="John Burke" width="150" height="150">
+              <span class="card__name">John<br>Burke</span>
+              <span class="card__speciality">Computer Science</span>
+              <span class="card__country">Belgium</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-ari-tang.jpg" alt="Ari Tang" width="150" height="150">
+              <span class="card__star" aria-hidden="true"></span>
+              <span class="card__name">Ari<br>Tang</span>
+              <span class="card__speciality">Biology</span>
+              <span class="card__country">China</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-rachel-andrew.jpg" alt="Rachel Andrew" width="150" height="150">
+              <span class="card__name">Rachel<br>Andrew</span>
+              <span class="card__speciality">Medicine</span>
+              <span class="card__country">UK</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <span class="card__avatar card__avatar--initials">A.M</span>
+              <span class="card__name">Anna<br>Muzychuk</span>
+              <span class="card__speciality">Chess</span>
+              <span class="card__country">Belarus</span>
+            </a>
+          </li>
+
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <span class="card__avatar card__avatar--initials">R.L</span>
+              <span class="card__name">Radoslaw<br>Ljuboevic</span>
+              <span class="card__speciality">Physics</span>
+              <span class="card__country">Poland</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section section--stats" id="statistics">
+      <div class="wrap">
+        <h2 class="section__title">Statistics</h2>
+
+        <table class="stats">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th tabindex="0">Specialty <span class="stats__arrow" aria-hidden="true"></span></th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Nationality</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr><td>Daisy Alexander</td><td>Chemistry</td><td>28</td><td>Female</td><td>Vietnam</td></tr>
+          <tr><td>Julia Bradley</td><td>Math</td><td>26</td><td>Female</td><td>USA</td></tr>
+          <tr><td>Rita Hart</td><td>Art</td><td>41</td><td>Female</td><td>Ireland</td></tr>
+          <tr><td>Jonathan Jacobs</td><td>Math</td><td>32</td><td>Male</td><td>England</td></tr>
+          <tr><td>Nathaniel White</td><td>Computer Science</td><td>37</td><td>Male</td><td>Austria</td></tr>
+          <tr><td>Frank Medina</td><td>English</td><td>43</td><td>Male</td><td>Italy</td></tr>
+          <tr><td>Ella Curtis</td><td>Chess</td><td>34</td><td>Female</td><td>USA</td></tr>
+          <tr><td>Claire Simmmons</td><td>Art</td><td>58</td><td>Female</td><td>Netherlands</td></tr>
+          <tr><td>Benjamin Knight</td><td>Biology</td><td>44</td><td>Male</td><td>Scotland</td></tr>
+          <tr><td>Norma Rose</td><td>Statistics</td><td>36</td><td>Female</td><td>France</td></tr>
+          </tbody>
+        </table>
+
+        <nav class="pagination">
+          <a class="pagination__link" href="#statistics">1</a>
+          <a class="pagination__link" href="#statistics">2</a>
+          <a class="pagination__link" href="#statistics">3</a>
+          <span class="pagination__dots">…</span>
+          <a class="pagination__link" href="#statistics">Last</a>
+        </nav>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section section--favorites" id="favorites">
+      <h2 class="section__title">Favorites</h2>
+
+      <div class="slider">
+        <a class="slider__arrow slider__arrow--prev" href="#fav-first" aria-label="Previous"></a>
+
+        <ul class="cards cards--slider">
+          <li class="card" id="fav-first">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-ihor-tkachuk.jpg" alt="Ihor Tkachuk" width="150" height="150">
+              <span class="card__name">Ihor<br>Tkachuk</span>
+              <span class="card__country">Ukraine</span>
+            </a>
+          </li>
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <span class="card__avatar card__avatar--initials">A.M</span>
+              <span class="card__name">Anna<br>Makarevich</span>
+              <span class="card__country">Belarus</span>
+            </a>
+          </li>
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-john-burke.jpg" alt="John Burke" width="150" height="150">
+              <span class="card__name">John<br>Burke</span>
+              <span class="card__country">Belgium</span>
+            </a>
+          </li>
+          <li class="card">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-ari-tang.jpg" alt="Ari Tang" width="150" height="150">
+              <span class="card__name">Ari<br>Tang</span>
+              <span class="card__country">China</span>
+            </a>
+          </li>
+          <li class="card" id="fav-last">
+            <a class="card__link" href="#teacher-info">
+              <img class="card__avatar" src="images/avatar-floor-jansen.jpg" alt="Floor Jansen" width="150" height="150">
+              <span class="card__name">Floor<br>Jansen</span>
+              <span class="card__country">Denmark</span>
+            </a>
+          </li>
+        </ul>
+
+        <a class="slider__arrow slider__arrow--next" href="#fav-last" aria-label="Next"></a>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section section--about" id="about">
+      <div class="wrap">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque facere, hic impedit itaque molestiae sit
+          tempore? Ea in mollitia natus rerum voluptates. Ea ex excepturi facere tempora. Aliquid asperiores hic
+          impedit iusto natus quaerat ratione sit? Culpa iusto optio voluptas voluptate. Enim eveniet fugit lure
+          malores molestiae, praesentium quila.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam eligendi illum in inventore ipsum odio
+          officiis omnis quisquam sed tempora?</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A atque esse expedita id iusto mollitia, odit
+          sint ullam veritatis vero?</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <nav class="nav">
+        <a class="nav__link" href="#teachers">Teachers</a>
+        <a class="nav__link" href="#statistics">Statistics</a>
+        <a class="nav__link" href="#favorites">Favorites</a>
+        <a class="nav__link" href="#about">About</a>
+      </nav>
+      <a class="btn btn--wide" href="#add-teacher">Add teacher</a>
+    </div>
+  </footer>
+
+</div>
+
+<div class="modal" id="teacher-info">
+  <a class="modal__backdrop" href="#!" aria-label="Close"></a>
+
+  <div class="modal__window">
+    <div class="modal__header">
+      <h2 class="modal__title">Teacher Info</h2>
+      <a class="modal__close" href="#!" aria-label="Close">&times;</a>
+    </div>
+
+    <div class="modal__body teacher">
+      <span class="teacher__star" aria-hidden="true"></span>
+      <img class="teacher__photo" src="images/teacher-photo.jpg" alt="Ihor Tkachuk" width="325" height="319">
+
+      <h3 class="teacher__name">Ihor Tkachuk</h3>
+      <p class="teacher__speciality">Chemistry</p>
+
+      <ul class="teacher__facts">
+        <li>Kyiv, Ukraine</li>
+        <li>35, Male</li>
+        <li><a href="mailto:ihor_tkachuk@domain.com">ihor_tkachuk@domain.com</a></li>
+        <li><a href="tel:+380964993252">+380964993252</a></li>
+      </ul>
+
+      <p class="teacher__notes">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab autem consectetur culpa
+        cumque, distinctio dolor dolore dolorem doloremque ea explicabo facilis nam nesciunt nisi pariatur
+        perspiciatis porro quis similique temporibus veniam veritatis? A ab ad, aliquam amet consequatur cupiditate
+        debitis deserunt doloribus dolorum earum eius eos minus nostrum odit omnis perferendis…</p>
+
+      <details class="teacher__map">
+        <summary>toggle map</summary>
+        <iframe title="Map" loading="lazy"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=30.2%2C50.2%2C30.8%2C50.7&amp;layer=mapnik"></iframe>
+      </details>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="add-teacher">
+  <a class="modal__backdrop" href="#!" aria-label="Close"></a>
+
+  <div class="modal__window modal__window--form">
+    <div class="modal__header">
+      <h2 class="modal__title">Add Teacher</h2>
+      <a class="modal__close" href="#!" aria-label="Close">&times;</a>
+    </div>
+
+    <form class="modal__body form" action="#">
+      <label class="form__label" for="name">Name</label>
+      <input class="form__input" id="name" type="text" placeholder="Enter name">
+
+      <label class="form__label" for="speciality">Specialty</label>
+      <select class="form__input" id="speciality">
+        <option>Mathematics</option>
+        <option>Chemistry</option>
+        <option>Physics</option>
+        <option>Biology</option>
+        <option>Chess</option>
+        <option>Art</option>
+        <option>Vocal</option>
+        <option>English</option>
+        <option>Computer Science</option>
+      </select>
+
+      <div class="form__row">
+        <div>
+          <label class="form__label" for="country">Country</label>
+          <select class="form__input" id="country">
+            <option>Ukraine</option>
+            <option>Poland</option>
+            <option>Belarus</option>
+            <option>Denmark</option>
+            <option>Belgium</option>
+            <option>China</option>
+            <option>India</option>
+            <option>UK</option>
+            <option>USA</option>
+          </select>
+        </div>
+        <div>
+          <label class="form__label" for="city">City</label>
+          <input class="form__input" id="city" type="text">
+        </div>
+      </div>
+
+      <div class="form__row">
+        <div>
+          <label class="form__label" for="email">Email</label>
+          <input class="form__input" id="email" type="email">
+        </div>
+        <div>
+          <label class="form__label" for="phone">Phone</label>
+          <input class="form__input" id="phone" type="tel">
+        </div>
+      </div>
+
+      <label class="form__label" for="birth">Date of birth</label>
+      <input class="form__input form__input--half" id="birth" type="date">
+
+      <fieldset class="form__sex">
+        <legend class="form__label">Sex</legend>
+        <label class="form__radio"><input type="radio" name="sex" value="male"> Male</label>
+        <label class="form__radio"><input type="radio" name="sex" value="female"> Female</label>
+      </fieldset>
+
+      <div class="form__color">
+        <label class="form__label" for="color">Background color</label>
+        <input id="color" type="color" value="#000000">
+      </div>
+
+      <label class="form__label" for="notes">Notes (optional)</label>
+      <textarea class="form__input form__textarea" id="notes" rows="5"></textarea>
+
+      <button class="btn btn--submit" type="submit">Add</button>
+    </form>
+  </div>
+</div>
+
+</body>
+
 </html>
