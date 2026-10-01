@@ -1,0 +1,113 @@
+@use "tokens" as *;
+@use "mixins" as *;
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(var(--card-cols), var(--card-col));
+  justify-content: center;
+  row-gap: var(--space-8);
+  margin-top: var(--space-16);
+
+  &--slider { margin-top: var(--space-10); }
+}
+
+.card {
+  &__link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    &:hover {
+      .card__avatar {
+        border-width: 4px;
+        border-color: var(--accent-dark);
+      }
+      .card__name { color: var(--accent); }
+    }
+  }
+
+  &__avatar {
+    @include circle(var(--card));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--accent);
+    object-fit: cover;
+    transition: .2s;
+
+    &--initials {
+      font-size: 40px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+  }
+
+  &__star {
+    position: absolute;
+    top: 9px;
+    left: 147px;
+    display: block;
+    width: var(--star-w);
+    height: var(--star-h);
+    background: var(--star);
+    clip-path: var(--star-shape);
+    pointer-events: none;
+  }
+
+  &__name {
+    margin-top: var(--space-5);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 30px;
+  }
+
+  &__speciality {
+    margin-top: var(--space-2);
+    color: var(--muted);
+  }
+
+  &__country { margin-top: var(--space-2); }
+}
+
+.slider {
+  position: relative;
+
+  &__arrow {
+    position: absolute;
+    top: var(--space-14);
+    width: 14px;
+    height: 14px;
+    border-left: 4px solid var(--text);
+    border-bottom: 4px solid var(--text);
+    border-radius: 2px;
+
+    &--prev { left: -56px; transform: rotate(45deg); }
+    &--next { right: -56px; transform: rotate(-135deg); }
+
+    &:hover { border-color: var(--accent); }
+  }
+}
+
+@include mobile {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: stretch;
+    row-gap: var(--space-8);
+    margin-top: var(--space-6);
+  }
+
+  .card {
+    &__avatar { @include circle(var(--card-sm)); }
+    &__star   { left: var(--card-sm); }
+
+    &__name {
+      margin-top: var(--space-4);
+      font-size: 20px;
+      line-height: 26px;
+    }
+  }
+
+  .slider__arrow { display: none; }
+}

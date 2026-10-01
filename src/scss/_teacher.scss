@@ -1,0 +1,83 @@
+@use "tokens" as *;
+@use "mixins" as *;
+
+.teacher {
+  &__photo {
+    float: left;
+    width: var(--teacher-photo);
+    margin: 0 var(--space-10) var(--space-5) 0;
+  }
+
+  &__star {
+    position: relative;
+    float: right;
+    display: block;
+    width: var(--teacher-star-w);
+    height: var(--teacher-star-h);
+    margin-left: var(--space-5);
+    pointer-events: none;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      clip-path: var(--star-shape);
+    }
+
+    &::before { inset: 0; background: var(--star); }
+    &::after  { inset: var(--teacher-star-outline); background: #fff; }
+  }
+
+  &__name { font-size: 40px; font-weight: 400; }
+
+  &__speciality {
+    margin-top: var(--space-8);
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  &__facts {
+    margin-top: var(--space-10);
+    color: var(--label);
+
+    li + li { margin-top: var(--space-4); }
+    a       { color: var(--link); }
+  }
+
+  &__notes {
+    clear: both;
+    margin-top: var(--space-24);
+  }
+
+  &__map {
+    margin-top: var(--space-5);
+
+    summary {
+      display: inline-block;
+      color: var(--link);
+      border-bottom: 1px dashed;
+      cursor: pointer;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 300px;
+      margin-top: var(--space-3);
+      border: 0;
+    }
+  }
+}
+
+@include mobile {
+  .teacher {
+    &__photo {
+      float: none;
+      width: 100%;
+      margin: 0 0 var(--space-4);
+    }
+
+    &__name  { font-size: 28px; }
+    &__notes { margin-top: var(--space-4); }
+  }
+}
