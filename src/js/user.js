@@ -58,6 +58,23 @@ const toBoolean = (value) => {
   return String(value).trim().toLowerCase() === 'true';
 };
 
+// Рахує повний вік (у роках) на сьогодні за нормалізованою датою народження (YYYY-MM-DD).
+const calculateAge = (normalizedBirthDate) => {
+  const birthDate = new Date(normalizedBirthDate);
+  if (Number.isNaN(birthDate.getTime())) return null;
+
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+
+  const hasHadBirthdayThisYear =
+    today.getMonth() > birthDate.getMonth()
+    || (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+  if (!hasHadBirthdayThisYear) age -= 1;
+
+  return age;
+};
+
 class User {
   constructor(mapped) {
     // поля, де null -- валідний фінальний стан (дані можуть бути відсутні в джерелі)
@@ -81,7 +98,11 @@ class User {
 
     this.email = normalizeEmail(mapped.email);
     this.b_date = normalizeDate(mapped.b_date);
-    this.age = toNumberOrNull(mapped.age);
+
+    // вік рахується з дати народження, якщо вона є -- це точніше за вік з джерела,
+    // який міг застаріти з моменту генерації даних; age з джерела -- тільки fallback
+    this.age = this.b_date !== null ? calculateAge(this.b_date) : toNumberOrNull(mapped.age);
+
     this.phone = normalizePhone(mapped.phone);
     this.picture_large = toStringOrNull(mapped.picture_large);
     this.picture_thumbnail = toStringOrNull(mapped.picture_thumbnail);
