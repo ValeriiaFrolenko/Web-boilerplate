@@ -12,6 +12,13 @@ const randomHexColor = () => `#${Math.floor(Math.random() * 0xffffff).toString(1
 
 const isBlank = (value) => value === null || value === undefined || String(value).trim() === '';
 
+// Шукає курс у списку без урахування регістру, повертає канонічне написання зі списку.
+const findCourse = (value) => {
+  if (isBlank(value)) return null;
+  const normalized = String(value).trim().toLowerCase();
+  return COURSES.find((course) => course.toLowerCase() === normalized) ?? null;
+};
+
 const toNumberOrNull = (value) => {
   if (isBlank(value)) return null;
   const num = Number(value);
@@ -80,40 +87,49 @@ class User {
     this.picture_thumbnail = toStringOrNull(mapped.picture_thumbnail);
 
     // службові поля задачі -- null/порожнє неприпустимо, завжди підставляється значення
-    this.id = !isBlank(mapped.id)
-      ? String(mapped.id).trim()
-      : crypto.randomUUID();
+
+    // id -- завжди згенерований UUID, незалежно від вхідних даних
+    // (консистентний формат важливіший за збереження оригінального ідентифікатора джерела)
+    this.id = crypto.randomUUID();
 
     this.favorite = !isBlank(mapped.favorite)
       ? toBoolean(mapped.favorite)
       : false;
 
-    this.course = !isBlank(mapped.course) && COURSES.includes(mapped.course)
-      ? mapped.course
-      : randomCourse();
+    this.course = findCourse(mapped.course) ?? randomCourse();
 
     this.bg_color = !isBlank(mapped.bg_color) && HEX_COLOR_PATTERN.test(mapped.bg_color)
       ? mapped.bg_color
       : randomHexColor();
 
     // note: порожній рядок -- валідне значення, не підміняється
-    this.note = mapped.note !== null && mapped.note !== undefined
-      ? String(mapped.note)
-      : '';
+    this.note = String(mapped.note ?? '');
   }
 
-  // Fallback-ланцюжок: full_name+b_date -> email -> phone -> id (завжди не-порожній)
-  getIdentityKey() {
+  // Повертає всі надійні ідентифікатори цього юзера (може бути декілька одночасно).
+  // Якщо жодного немає -- fallback на id (завжди присутній).
+  getIdentityKeys() {
+    const keys = [];
+
     if (this.full_name !== null && this.b_date !== null) {
-      return `name:${this.full_name.toLowerCase()}|${this.b_date}`;
+      keys.push(`name:${this.full_name.toLowerCase()}|${this.b_date}`);
     }
     if (this.email !== null) {
-      return `email:${this.email}`;
+      keys.push(`email:${this.email}`);
     }
     if (this.phone !== null) {
-      return `phone:${this.phone}`;
+      keys.push(`phone:${this.phone}`);
     }
-    return `id:${this.id}`;
+    if (this.full_name !== null && this.picture_large !== null) {
+      keys.push(`name:${this.full_name.toLowerCase()}|photo:${this.picture_large}`);
+    }
+
+    if (keys.length === 0) {
+      keys.push(`id:${this.id}`);
+    }
+
+    return keys;
   }
 }
+
 export default User;
