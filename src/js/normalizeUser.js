@@ -33,7 +33,7 @@ const normalizeDate = (value) => {
   if (isBlank(value)) return null;
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return null;
-  return date.toISOString().slice(0, 10); // YYYY-MM-DD, без часу
+  return date.toISOString();
 };
 
 const normalizePhone = (value) => {
@@ -66,9 +66,7 @@ const calculateAge = (normalizedBirthDate) => {
 
 // Спільна фінальна збірка: приймає вже дістані (ще не нормалізовані) значення
 // полів з будь-якого джерела й приводить їх до єдиного нормалізованого вигляду.
-// Викликається з normalizeFromRandomUserMock і normalizeFromAdditionalUsers --
-// тут немає нічого джерело-специфічного, тому дублювання уникнуто без
-// проміжного "плоского" формату між парсингом джерела і нормалізацією.
+// Викликається з normalizeFromRandomUserMock і normalizeFromAdditionalUsers
 const finalizeNormalized = (fields) => {
   const b_date = normalizeDate(fields.b_date);
 
