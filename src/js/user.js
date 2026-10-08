@@ -30,9 +30,23 @@ const toStringOrNull = (value) => {
   return String(value);
 };
 
+const capitalizeFirst = (value) => {
+  if (isBlank(value)) return null;
+  const str = String(value).trim();
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 const normalizeFullName = (value) => {
   if (isBlank(value)) return null;
   return String(value).trim().replace(/\s+/g, ' ');
+};
+
+
+const normalizeNote = (value) => {
+  if (value === null || value === undefined) return '';
+  const str = String(value).trim();
+  if (str === '') return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };
 
 const normalizeDate = (value) => {
@@ -78,7 +92,7 @@ const calculateAge = (normalizedBirthDate) => {
 class User {
   constructor(mapped) {
     // поля, де null -- валідний фінальний стан (дані можуть бути відсутні в джерелі)
-    this.gender = toStringOrNull(mapped.gender);
+    this.gender = capitalizeFirst(mapped.gender);
     this.title = toStringOrNull(mapped.title);
     this.full_name = normalizeFullName(mapped.full_name);
     this.city = toStringOrNull(mapped.city);
@@ -123,8 +137,8 @@ class User {
       ? mapped.bg_color
       : randomHexColor();
 
-    // note: порожній рядок -- валідне значення, не підміняється
-    this.note = String(mapped.note ?? '');
+    // note: порожній рядок -- валідне значення, лишається порожнім; непорожній -- капіталізується
+    this.note = normalizeNote(mapped.note);
   }
 
   // Повертає всі надійні ідентифікатори цього юзера (може бути декілька одночасно).
