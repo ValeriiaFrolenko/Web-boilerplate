@@ -25,9 +25,8 @@ const toBoolean = (value) => {
 };
 
 class User {
-  // Приймає нормалізований об'єкт (результат normalizeUserFields з normalizeUser.js),.
+  // Приймає вже нормалізований об'єкт (результат normalizeUser.js).
   constructor(normalized) {
-    // поля, де null -- валідний фінальний стан (дані можуть бути відсутні в джерелі)
     this.gender = normalized.gender;
     this.title = normalized.title;
     this.full_name = normalized.full_name;
@@ -54,10 +53,7 @@ class User {
     this.picture_large = normalized.picture_large;
     this.picture_thumbnail = normalized.picture_thumbnail;
 
-    // службові поля задачі -- null/порожнє неприпустимо, завжди підставляється значення
-
-    // id -- завжди згенерований UUID, незалежно від вхідних даних
-    // (консистентний формат важливіший за збереження оригінального ідентифікатора джерела)
+    // службові поля -- null неприпустимо, завжди підставляється значення
     this.id = crypto.randomUUID();
 
     this.favorite = !isBlank(normalized.favorite)
@@ -73,10 +69,7 @@ class User {
     this.note = normalized.note;
   }
 
-  // Повертає всі надійні ідентифікатори цього юзера (може бути декілька одночасно).
-  // Якщо жодного немає -- fallback на id (завжди присутній).
-  // Делегує формулу ключа в normalizeUser.js -- та сама логіка, що використовується
-  // в formatUsers.js до створення User, тут не дублюється.
+  // Усі надійні ідентифікатори юзера; якщо жодного немає -- fallback на id.
   getIdentityKeys() {
     const keys = buildIdentityKeys(this);
     return keys.length > 0 ? keys : [`id:${this.id}`];

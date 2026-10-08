@@ -14,8 +14,7 @@ const mergeNormalized = (target, source) => {
   }
 };
 
-
-// Результатом виконання є функція, що повертає масив відформатованих об'єктів.
+// Об'єднує обидва джерела в один масив User, дублікати (за identity keys) мерджить.
 const formatUsers = (randomUserMockList, additionalUsersList) => {
   const allNormalized = [
     ...randomUserMockList.map(normalizeFromRandomUserMock),

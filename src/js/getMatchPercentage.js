@@ -1,7 +1,6 @@
 import findUser from './findUser.js';
 
-// Повертає відсоток об'єктів у масиві, що відповідають параметру пошуку.
-// Приймає ті самі параметри, що й findUser (field, query, operator) --
+// Відсоток юзерів, що відповідають параметру пошуку (ті самі field/query/operator, що й findUser).
 const getMatchPercentage = (users, field, query, operator = '=') => {
   if (users.length === 0) return 0;
 

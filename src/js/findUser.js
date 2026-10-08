@@ -6,12 +6,9 @@ const AGE_COMPARATORS = {
   '<=': (age, target) => age <= target,
 };
 
-// Знаходить усі об'єкти User, що відповідають параметру пошуку.
-// field -- 'name' (шукає в full_name), 'note' або 'age'.
-// query -- для 'name'/'note': підрядок, шукається без урахування регістру (часткове входження).
-//          для 'age': число для порівняння.
-// operator -- тільки для 'age': '=' (за замовчуванням), '>', '<', '>=', '<='.
-// Повертає масив знайдених User (порожній, якщо нічого не знайдено).
+// field: 'name' (шукає в full_name), 'note' або 'age'.
+// query: для name/note -- підрядок (без урахування регістру), для age -- число.
+// operator: тільки для age -- '=', '>', '<', '>=', '<=' (за замовчуванням '=').
 const findUser = (users, field, query, operator = '=') => {
   if (field === 'age') {
     const targetAge = Number(query);

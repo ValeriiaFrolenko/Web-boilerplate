@@ -64,9 +64,7 @@ const calculateAge = (normalizedBirthDate) => {
   return age;
 };
 
-// Спільна фінальна збірка: приймає вже дістані (ще не нормалізовані) значення
-// полів з будь-якого джерела й приводить їх до єдиного нормалізованого вигляду.
-// Викликається з normalizeFromRandomUserMock і normalizeFromAdditionalUsers
+// Спільна фінальна збірка полів з будь-якого джерела в єдиний нормалізований вигляд.
 const finalizeNormalized = (fields) => {
   const b_date = normalizeDate(fields.b_date);
 
@@ -97,16 +95,14 @@ const finalizeNormalized = (fields) => {
 
     note: normalizeNote(fields.note),
 
-    // не нормалізуються тут, переносяться як є для User (генерація fallback -- його робота)
+    // не нормалізуються тут -- генерація fallback для них це робота User
     favorite: fields.favorite ?? null,
     course: fields.course ?? null,
     bg_color: fields.bg_color ?? null,
   };
 };
 
-// Дістає поля з одного об'єкта randomUserMock (вкладена структура name/location/dob/picture)
-// і одразу нормалізує. Поля favorite/course/bg_color/note в цьому джерелі відсутні --
-// finalizeNormalized підставить для них null.
+// Дістає поля з randomUserMock (вкладена структура name/location/dob/picture) і нормалізує.
 const normalizeFromRandomUserMock = (raw) => finalizeNormalized({
   gender: raw.gender,
   title: raw.name?.title,

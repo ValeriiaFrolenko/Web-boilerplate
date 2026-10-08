@@ -1,10 +1,8 @@
-// Фільтрує масив User за критеріями country, age, gender, favorite.
-// Усі критерії опціональні, непередані -- ігноруються (не звужують вибірку).
-// Критерії комбінуються через логічне "і".
+// Фільтрує User за критеріями country, age, gender, favorite.
+// Усі критерії опціональні, непередані (undefined) ігноруються.
 
-// Порівнює два рядкові критерії без урахування регістру. null не збігається
-// ні з чим, окрім null (бо user.country/user.gender може бути null, якщо
-// даних немає в джерелі -- це не те саме, що порожній рядок чи збіг).
+// null не збігається ні з чим, окрім null (user.country/gender можуть бути
+// null, якщо даних немає в джерелі -- це не те саме, що порожній рядок).
 const equalsCaseInsensitive = (userValue, criterionValue) => {
   if (userValue === null) return criterionValue === null;
   return String(userValue).toLowerCase() === String(criterionValue).toLowerCase();
