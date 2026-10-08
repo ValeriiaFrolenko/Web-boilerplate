@@ -1,32 +1,31 @@
 import User from './user.js';
-import { mapRandomUserMockUser, mapAdditionalUser } from './mappers.js';
-import { normalizeUserFields, buildIdentityKeys } from './normalizeUser.js';
-
-const MERGEABLE_FIELDS = ['favorite', 'course', 'bg_color', 'note'];
+import { normalizeFromRandomUserMock, normalizeFromAdditionalUsers, buildIdentityKeys } from './normalizeUser.js';
 
 // Доповнює target полями з source там, де в target значення відсутнє/порожнє.
-
 const mergeNormalized = (target, source) => {
-  MERGEABLE_FIELDS.forEach((field) => {
+  for (const [field, value] of Object.entries(source)) {
+    const isSourceBlank = value === null || value === undefined || value === '';
+    if (isSourceBlank) continue;
+
     const isTargetBlank = target[field] === null || target[field] === undefined || target[field] === '';
-    const isSourceBlank = source[field] === null || source[field] === undefined || source[field] === '';
-    if (isTargetBlank && !isSourceBlank) {
-      target[field] = source[field];
+    if (isTargetBlank) {
+      target[field] = value;
     }
-  });
+  }
 };
+
 
 // Результатом виконання є функція, що повертає масив відформатованих об'єктів.
 const formatUsers = (randomUserMockList, additionalUsersList) => {
-  const mappedRandomUsers = randomUserMockList.map(mapRandomUserMockUser);
-  const mappedAdditionalUsers = additionalUsersList.map(mapAdditionalUser);
-  const allMapped = [...mappedRandomUsers, ...mappedAdditionalUsers];
+  const allNormalized = [
+    ...randomUserMockList.map(normalizeFromRandomUserMock),
+    ...additionalUsersList.map(normalizeFromAdditionalUsers),
+  ];
 
   const keyToNormalized = new Map();
   const uniqueNormalized = [];
 
-  for (const mapped of allMapped) {
-    const normalized = normalizeUserFields(mapped);
+  for (const normalized of allNormalized) {
     const keys = buildIdentityKeys(normalized);
 
     const existing = keys.length > 0

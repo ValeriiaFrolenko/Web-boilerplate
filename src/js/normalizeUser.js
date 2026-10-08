@@ -64,47 +64,108 @@ const calculateAge = (normalizedBirthDate) => {
   return age;
 };
 
-const normalizeUserFields = (mapped) => {
-  const b_date = normalizeDate(mapped.b_date);
+// Спільна фінальна збірка: приймає вже дістані (ще не нормалізовані) значення
+// полів з будь-якого джерела й приводить їх до єдиного нормалізованого вигляду.
+// Викликається з normalizeFromRandomUserMock і normalizeFromAdditionalUsers --
+// тут немає нічого джерело-специфічного, тому дублювання уникнуто без
+// проміжного "плоского" формату між парсингом джерела і нормалізацією.
+const finalizeNormalized = (fields) => {
+  const b_date = normalizeDate(fields.b_date);
 
   return {
-    gender: capitalizeFirst(mapped.gender),
-    title: toStringOrNull(mapped.title),
-    full_name: normalizeFullName(mapped.full_name),
-    city: toStringOrNull(mapped.city),
-    state: toStringOrNull(mapped.state),
-    country: toStringOrNull(mapped.country),
-    postcode: toStringOrNull(mapped.postcode),
+    gender: capitalizeFirst(fields.gender),
+    title: toStringOrNull(fields.title),
+    full_name: normalizeFullName(fields.full_name),
+    city: toStringOrNull(fields.city),
+    state: toStringOrNull(fields.state),
+    country: toStringOrNull(fields.country),
+    postcode: toStringOrNull(fields.postcode),
 
-    latitude: toNumberOrNull(mapped.latitude),
-    longitude: toNumberOrNull(mapped.longitude),
+    latitude: toNumberOrNull(fields.latitude),
+    longitude: toNumberOrNull(fields.longitude),
 
-    tz_offset: toStringOrNull(mapped.tz_offset),
-    tz_description: toStringOrNull(mapped.tz_description),
+    tz_offset: toStringOrNull(fields.tz_offset),
+    tz_description: toStringOrNull(fields.tz_description),
 
-    email: normalizeEmail(mapped.email),
+    email: normalizeEmail(fields.email),
     b_date,
     // вік рахується з дати народження, якщо вона є -- це точніше за вік з джерела,
     // який міг застаріти з моменту генерації даних; age з джерела -- тільки fallback
-    age: b_date !== null ? calculateAge(b_date) : toNumberOrNull(mapped.age),
+    age: b_date !== null ? calculateAge(b_date) : toNumberOrNull(fields.age),
 
-    phone: normalizePhone(mapped.phone),
-    picture_large: toStringOrNull(mapped.picture_large),
-    picture_thumbnail: toStringOrNull(mapped.picture_thumbnail),
+    phone: normalizePhone(fields.phone),
+    picture_large: toStringOrNull(fields.picture_large),
+    picture_thumbnail: toStringOrNull(fields.picture_thumbnail),
 
-    note: normalizeNote(mapped.note),
+    note: normalizeNote(fields.note),
 
     // не нормалізуються тут, переносяться як є для User (генерація fallback -- його робота)
-    favorite: mapped.favorite ?? null,
-    course: mapped.course ?? null,
-    bg_color: mapped.bg_color ?? null,
+    favorite: fields.favorite ?? null,
+    course: fields.course ?? null,
+    bg_color: fields.bg_color ?? null,
   };
 };
 
-// Рахує ідентифікаційні ключі з уже нормалізованого об'єкта (результату
-// normalizeUserFields). Єдине джерело правди для того, що вважається "тим самим
-// юзером" -- використовується і для дедуплікації до створення User, і (через User)
-// після.
+// Дістає поля з одного об'єкта randomUserMock (вкладена структура name/location/dob/picture)
+// і одразу нормалізує. Поля favorite/course/bg_color/note в цьому джерелі відсутні --
+// finalizeNormalized підставить для них null.
+const normalizeFromRandomUserMock = (raw) => finalizeNormalized({
+  gender: raw.gender,
+  title: raw.name?.title,
+  full_name: raw.name ? `${raw.name.first ?? ''} ${raw.name.last ?? ''}`.trim() : null,
+
+  city: raw.location?.city,
+  state: raw.location?.state,
+  country: raw.location?.country,
+  postcode: raw.location?.postcode,
+
+  latitude: raw.location?.coordinates?.latitude,
+  longitude: raw.location?.coordinates?.longitude,
+
+  tz_offset: raw.location?.timezone?.offset,
+  tz_description: raw.location?.timezone?.description,
+
+  email: raw.email,
+  b_date: raw.dob?.date,
+  age: raw.dob?.age,
+  phone: raw.phone,
+
+  picture_large: raw.picture?.large,
+  picture_thumbnail: raw.picture?.thumbnail,
+});
+
+// Дістає поля з одного об'єкта additionalUsers (плоска структура) і одразу нормалізує.
+const normalizeFromAdditionalUsers = (raw) => finalizeNormalized({
+  gender: raw.gender,
+  title: raw.title,
+  full_name: raw.full_name,
+
+  city: raw.city,
+  state: raw.state,
+  country: raw.country,
+  postcode: raw.postcode,
+
+  latitude: raw.coordinates?.latitude,
+  longitude: raw.coordinates?.longitude,
+
+  tz_offset: raw.timezone?.offset,
+  tz_description: raw.timezone?.description,
+
+  email: raw.email,
+  b_date: raw.b_day,
+  age: raw.age,
+  phone: raw.phone,
+
+  picture_large: raw.picture_large,
+  picture_thumbnail: raw.picture_thumbnail,
+
+  favorite: raw.favorite,
+  course: raw.course,
+  bg_color: raw.bg_color,
+  note: raw.note,
+});
+
+// Рахує ідентифікаційні ключі з нормалізованого об'єкта.
 const buildIdentityKeys = (normalized) => {
   const keys = [];
 
@@ -124,4 +185,4 @@ const buildIdentityKeys = (normalized) => {
   return keys;
 };
 
-export { normalizeUserFields, buildIdentityKeys, isBlank };
+export { normalizeFromRandomUserMock, normalizeFromAdditionalUsers, buildIdentityKeys, isBlank };
