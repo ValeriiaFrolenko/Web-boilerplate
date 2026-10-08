@@ -1,5 +1,4 @@
 // Зводить один об'єкт з randomUserMock до стандартного плоского набору ключів,
-// який очікує конструктор User.
 const mapRandomUserMockUser = (raw) => ({
   gender: raw.gender ?? null,
   title: raw.name?.title ?? null,
