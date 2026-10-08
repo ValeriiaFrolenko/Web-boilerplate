@@ -75,10 +75,10 @@ const finalizeNormalized = (fields) => {
     city: toStringOrNull(fields.city),
     state: toStringOrNull(fields.state),
     country: toStringOrNull(fields.country),
-    postcode: toStringOrNull(fields.postcode),
+    postcode: toNumberOrNull(fields.postcode),
 
-    latitude: toNumberOrNull(fields.latitude),
-    longitude: toNumberOrNull(fields.longitude),
+    latitude: toStringOrNull(fields.latitude),
+    longitude: toStringOrNull(fields.longitude),
 
     tz_offset: toStringOrNull(fields.tz_offset),
     tz_description: toStringOrNull(fields.tz_description),
