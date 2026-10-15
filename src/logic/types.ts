@@ -112,7 +112,7 @@ export interface FilterCriteria {
   favorite?: boolean;
 }
 
-export type SortField = 'fullName' | 'age' | 'birthDate' | 'country';
+export type SortField = 'fullName' | 'age' | 'birthDate' | 'country' | 'course';
 export type SortDirection = 'asc' | 'desc';
 
 export type FindUserField = 'name' | 'note' | 'age';
