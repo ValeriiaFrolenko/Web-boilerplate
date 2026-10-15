@@ -1,4 +1,6 @@
-const AGE_COMPARATORS = {
+import type { User, FindUserField, AgeOperator } from './types';
+
+const AGE_COMPARATORS: Record<AgeOperator, (age: number, target: number) => boolean> = {
   '=': (age, target) => age === target,
   '>': (age, target) => age > target,
   '<': (age, target) => age < target,
@@ -6,20 +8,20 @@ const AGE_COMPARATORS = {
   '<=': (age, target) => age <= target,
 };
 
-// field: 'name' (шукає в full_name), 'note' або 'age'.
-// query: для name/note -- підрядок (без урахування регістру), для age -- число.
-// operator: тільки для age -- '=', '>', '<', '>=', '<=' (за замовчуванням '=').
-const findUser = (users, field, query, operator = '=') => {
+const findUser = (
+  users: User[],
+  field: FindUserField,
+  query: string | number,
+  operator: AgeOperator = '=',
+): User[] => {
   if (field === 'age') {
     const targetAge = Number(query);
     const compare = AGE_COMPARATORS[operator];
-    if (!compare) throw new Error(`Unknown age comparison operator: ${operator}`);
 
     return users.filter((user) => user.age !== null && compare(user.age, targetAge));
   }
 
-  // name -- шукає по full_name, note -- по note
-  const userField = field === 'name' ? 'full_name' : 'note';
+  const userField: 'fullName' | 'note' = field === 'name' ? 'fullName' : 'note';
   const normalizedQuery = String(query).trim().toLowerCase();
 
   return users.filter((user) => {
