@@ -164,6 +164,7 @@ body {
   grid-template-columns: auto 1fr;
   gap: 6px 12px;
   font-size: 14px;
+  text-align: left;
 }
 
 .modal__details dt {
@@ -178,6 +179,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  text-align: left;
 }
 
 .modal--form label {
@@ -187,10 +189,17 @@ body {
   gap: 4px;
 }
 
-.modal--form input {
+.modal--form input,
+.modal--form select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.modal--form input[type="checkbox"] {
+  align-self: flex-start;
+  width: auto;
+  margin: 0;
 }
 
 .form-error {

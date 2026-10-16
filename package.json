@@ -10,6 +10,7 @@
     "stylelint": "stylelint src/**/*.scss"
   },
   "dependencies": {
+    "countries-list": "^3.1.10",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

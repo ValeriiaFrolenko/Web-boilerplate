@@ -1,4 +1,9 @@
 import type { FilterCriteria } from '../logic/types';
+import { countries } from 'countries-list';
+
+const COUNTRY_OPTIONS: string[] = Object.values(countries)
+    .map((c) => c.name)
+    .sort((a, b) => a.localeCompare(b));
 
 interface FilterPanelProps {
     filters: FilterCriteria;
@@ -65,12 +70,12 @@ const FilterPanel = ({ filters, onChange }: FilterPanelProps) => {
         <div className="filter-panel">
             <label className="filter-panel__field">
                 Країна
-                <input
-                    type="text"
-                    value={filters.country ?? ''}
-                    onChange={(e) => updateCountry(e.target.value)}
-                    placeholder="Будь-яка"
-                />
+                <select value={filters.country ?? ''} onChange={(e) => updateCountry(e.target.value)}>
+                    <option value="">Будь-яка</option>
+                    {COUNTRY_OPTIONS.map((name) => (
+                        <option key={name} value={name}>{name}</option>
+                    ))}
+                </select>
             </label>
 
             <label className="filter-panel__field">
