@@ -1,7 +1,5 @@
 import type { RawRandomUserMockEntry, User } from '../logic/types';
-import { normalizeFromRandomUserMock } from '../logic/normalizeFromSource';
-import { buildUser } from '../logic/buildUser';
-import validateUser from '../logic/validateUser';
+import formatUsers from '../logic/formatUsers';
 
 const RANDOM_USER_URL = 'https://randomuser.me/api/';
 const TEACHERS_URL = '/api/teachers';
@@ -26,16 +24,8 @@ export const fetchValidUsers = async (target: number): Promise<User[]> => {
         const needed = target - valid.length + FETCH_BUFFER;
         const raw = await fetchRaw(needed);
 
-        for (const entry of raw) {
-            const typed = normalizeFromRandomUserMock(entry);
-            const validation = validateUser(typed);
-            if (!validation.valid) {
-                console.warn('Dropped invalid API record', validation.errors, typed);
-                continue;
-            }
-            valid.push(buildUser(typed));
-            if (valid.length === target) break;
-        }
+        const formatted = formatUsers(raw);
+        valid.push(...formatted);
     }
 
     if (valid.length < target) {
@@ -44,7 +34,7 @@ export const fetchValidUsers = async (target: number): Promise<User[]> => {
         );
     }
 
-    return valid;
+    return valid.slice(0, target);
 };
 
 export const postTeacher = async (teacher: User): Promise<User> => {

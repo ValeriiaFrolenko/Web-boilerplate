@@ -15,33 +15,6 @@ export interface RawRandomUserMockEntry {
     picture?: { large?: string; thumbnail?: string };
 }
 
-export interface RawAdditionalUserEntry {
-    gender?: string;
-    title?: string | null;
-    full_name?: string | null;
-    city?: string;
-    state?: string;
-    country?: string;
-    postcode?: number | string;
-    coordinates?: { latitude?: string; longitude?: string };
-    timezone?: { offset?: string; description?: string };
-    email?: string;
-    b_day?: string | null;
-    age?: number;
-    phone?: string;
-    picture_large?: string;
-    picture_thumbnail?: string;
-    favorite?: unknown;
-    course?: unknown;
-    bg_color?: unknown;
-    note?: unknown;
-}
-
-// Мердж дублікатів має відбутись до генерації дефолтів нижче -- інакше
-// змерджились би два незалежно згенеровані випадкові фолбеки.
-//
-// null у кожному полі означає "дані з джерела відсутні" -- жодне поле
-// тут не дефолтизоване. Дефолт підставляється один раз, у User.
 export interface TypedUserFields {
     fullName: string | null;
     gender: string | null;
