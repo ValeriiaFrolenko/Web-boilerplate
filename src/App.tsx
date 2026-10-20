@@ -7,12 +7,10 @@ import type {
     FindUserField,
     AgeOperator,
 } from './logic/types';
-import { normalizeFromRandomUserMock } from './logic/normalizeFromSource';
-import { buildUser } from './logic/buildUser';
 import filterUsers from './logic/filterUsers';
 import sortUsers from './logic/sortUsers';
 import findUser from './logic/findUser';
-import { fetchRandomUsers, postTeacher } from './api/randomUserApi';
+import { fetchValidUsers, postTeacher } from './api/randomUserApi';
 
 import FilterPanel from './components/FilterPanel';
 import SearchBar from './components/SearchBar';
@@ -24,9 +22,6 @@ import Pagination from './components/Pagination';
 
 const INITIAL_LOAD = 50;
 const PAGE_SIZE = 10;
-
-const normalizeBatch = (raw: Awaited<ReturnType<typeof fetchRandomUsers>>): User[] =>
-    raw.map((entry) => buildUser(normalizeFromRandomUserMock(entry)));
 
 const App = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -54,9 +49,9 @@ const App = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const raw = await fetchRandomUsers(INITIAL_LOAD);
+                const loaded = await fetchValidUsers(INITIAL_LOAD);
                 if (cancelled) return;
-                setUsers(normalizeBatch(raw));
+                setUsers(loaded);
             } catch (err) {
                 if (cancelled) return;
                 setError(err instanceof Error ? err.message : 'Failed to load users');
@@ -144,8 +139,8 @@ const App = () => {
 
         setIsFetchingMore(true);
         try {
-            const raw = await fetchRandomUsers(PAGE_SIZE);
-            setUsers((prev) => [...prev, ...normalizeBatch(raw)]);
+            const loaded = await fetchValidUsers(PAGE_SIZE);
+            setUsers((prev) => [...prev, ...loaded]);
             setCurrentPage((p) => p + 1);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load more users');
