@@ -29,12 +29,38 @@ body {
   margin-bottom: 20px;
 }
 
+.app__status {
+  padding: 32px;
+  text-align: center;
+  color: #666;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.app__error {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  background: #fee;
+  color: #c33;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
 .button {
   padding: 8px 16px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
   font-size: 14px;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .button--primary {
@@ -68,6 +94,35 @@ body {
   padding: 6px 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.statistics-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-panel__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statistics-panel__value {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.statistics-panel__label {
+  font-size: 12px;
+  color: #777;
 }
 
 .teacher-table {
@@ -119,6 +174,19 @@ body {
 
 .favorite-button--active {
   color: #f5b301;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.pagination__info {
+  font-size: 14px;
+  color: #555;
 }
 
 .modal-overlay {

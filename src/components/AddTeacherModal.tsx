@@ -11,7 +11,7 @@ const COUNTRY_OPTIONS: string[] = Object.values(countries)
 
 interface AddTeacherModalProps {
     onClose: () => void;
-    onSubmit: (user: User) => void;
+    onSubmit: (user: User) => Promise<void>;
 }
 
 interface FormState {
@@ -81,6 +81,8 @@ type StringField =
 const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
     const [form, setForm] = useState<FormState>(EMPTY_FORM);
     const [errors, setErrors] = useState<ValidationError[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     useEffect(() => {
         setErrors(validateUser(toTypedFields(form)).errors);
@@ -97,7 +99,7 @@ const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
         setForm((prev) => ({ ...prev, favorite: value }));
     };
 
-    const handleSubmit = (e: SubmitEvent): void => {
+    const handleSubmit = async (e: SubmitEvent): Promise<void> => {
         e.preventDefault();
 
         const typed = toTypedFields(form);
@@ -105,7 +107,15 @@ const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
         setErrors(result.errors);
         if (!result.valid) return;
 
-        onSubmit(constructUserFromForm(typed));
+        setIsSubmitting(true);
+        setSubmitError(null);
+        try {
+            await onSubmit(constructUserFromForm(typed));
+        } catch (err) {
+            setSubmitError(err instanceof Error ? err.message : 'Failed to save teacher');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -205,8 +215,10 @@ const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
                     {errorFor('note') && <span className="form-error">{errorFor('note')}</span>}
                 </label>
 
-                <button type="submit" className="button button--primary">
-                    Додати
+                {submitError && <p className="form-error">{submitError}</p>}
+
+                <button type="submit" className="button button--primary" disabled={isSubmitting}>
+                    {isSubmitting ? 'Збереження…' : 'Додати'}
                 </button>
             </form>
         </div>
