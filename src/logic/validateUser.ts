@@ -97,15 +97,18 @@ const validateEmail = (value: string | null): ValidationError | null => {
 
 const validatePhone = (phone: string | null, country: string | null): ValidationError | null => {
     if (phone === null) return { field: 'phone', message: 'must not be empty' };
-    if (!/^\d+$/.test(phone)) return { field: 'phone', message: 'must contain only digits' };
+    const digits = phone.replace(/\D/g, '');
+    if (digits === '') return { field: 'phone', message: 'must contain digits' };
     if (country === null) return { field: 'phone', message: 'country must be set to validate phone' };
 
     const range = PHONE_LENGTH_BY_COUNTRY[country];
     if (range === undefined) {
-        return { field: 'phone', message: 'unsupported country for phone validation' };
+        return digits.length >= 7 && digits.length <= 15
+            ? null
+            : { field: 'phone', message: 'must be 7-15 digits' };
     }
 
-    return phone.length >= range.min && phone.length <= range.max
+    return digits.length >= range.min && digits.length <= range.max
         ? null
         : { field: 'phone', message: `must be ${range.min}-${range.max} digits for ${country}` };
 };

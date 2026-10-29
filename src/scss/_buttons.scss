@@ -3,6 +3,7 @@
 
 .btn {
   @include flex-center;
+  justify-content: center;
   height: var(--input-h);
   padding: 0 var(--space-4);
   font-weight: 600;
@@ -22,6 +23,11 @@
   &:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   &--wide {

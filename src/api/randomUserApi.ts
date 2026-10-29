@@ -37,6 +37,16 @@ export const fetchValidUsers = async (target: number): Promise<User[]> => {
     return valid.slice(0, target);
 };
 
+export const fetchSavedTeachers = async (): Promise<User[]> => {
+    const response = await fetch(TEACHERS_URL);
+
+    if (!response.ok) {
+        throw new Error(`json-server GET failed: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json() as Promise<User[]>;
+};
+
 export const postTeacher = async (teacher: User): Promise<User> => {
     const response = await fetch(TEACHERS_URL, {
         method: 'POST',

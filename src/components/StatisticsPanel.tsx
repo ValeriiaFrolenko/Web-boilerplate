@@ -1,11 +1,13 @@
+import { memo } from 'react';
 import type { User } from '../logic/types';
 
 interface StatisticsPanelProps {
     users: User[];
     visibleUsers: User[];
+    matchPercent: number | null;
 }
 
-const StatisticsPanel = ({ users, visibleUsers }: StatisticsPanelProps) => {
+const StatisticsPanel = memo(({ users, visibleUsers, matchPercent }: StatisticsPanelProps) => {
     const favorites = visibleUsers.filter((u) => u.favorite).length;
     const maleCount = visibleUsers.filter((u) => u.gender?.toLowerCase() === 'male').length;
     const femaleCount = visibleUsers.filter((u) => u.gender?.toLowerCase() === 'female').length;
@@ -14,31 +16,37 @@ const StatisticsPanel = ({ users, visibleUsers }: StatisticsPanelProps) => {
     ).size;
 
     return (
-        <div className="statistics-panel">
-            <div className="statistics-panel__item">
-                <span className="statistics-panel__value">{users.length}</span>
-                <span className="statistics-panel__label">Всього завантажено</span>
+        <div className="stats-panel">
+            <div className="stats-panel__item">
+                <span className="stats-panel__value">{users.length}</span>
+                <span className="stats-panel__label">Loaded</span>
             </div>
-            <div className="statistics-panel__item">
-                <span className="statistics-panel__value">{visibleUsers.length}</span>
-                <span className="statistics-panel__label">Видимих зараз</span>
+            <div className="stats-panel__item">
+                <span className="stats-panel__value">{visibleUsers.length}</span>
+                <span className="stats-panel__label">Visible</span>
             </div>
-            <div className="statistics-panel__item">
-                <span className="statistics-panel__value">{favorites}</span>
-                <span className="statistics-panel__label">Обраних</span>
+            <div className="stats-panel__item">
+                <span className="stats-panel__value">{favorites}</span>
+                <span className="stats-panel__label">Favorites</span>
             </div>
-            <div className="statistics-panel__item">
-        <span className="statistics-panel__value">
-          {maleCount} / {femaleCount}
-        </span>
-                <span className="statistics-panel__label">Ч / Ж</span>
+            <div className="stats-panel__item">
+                <span className="stats-panel__value">{maleCount} / {femaleCount}</span>
+                <span className="stats-panel__label">M / F</span>
             </div>
-            <div className="statistics-panel__item">
-                <span className="statistics-panel__value">{uniqueCountries}</span>
-                <span className="statistics-panel__label">Унікальних країн</span>
+            <div className="stats-panel__item">
+                <span className="stats-panel__value">{uniqueCountries}</span>
+                <span className="stats-panel__label">Countries</span>
+            </div>
+            <div className="stats-panel__item">
+                <span className="stats-panel__value">
+                    {matchPercent === null ? '—' : `${Math.round(matchPercent)}%`}
+                </span>
+                <span className="stats-panel__label">Match</span>
             </div>
         </div>
     );
-};
+});
+
+StatisticsPanel.displayName = 'StatisticsPanel';
 
 export default StatisticsPanel;

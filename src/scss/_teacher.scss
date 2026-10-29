@@ -6,6 +6,7 @@
     float: left;
     width: var(--teacher-photo);
     margin: 0 var(--space-10) var(--space-5) 0;
+    object-fit: cover;
   }
 
   &__star {
@@ -15,7 +16,10 @@
     width: var(--teacher-star-w);
     height: var(--teacher-star-h);
     margin-left: var(--space-5);
-    pointer-events: none;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
 
     &::before,
     &::after {
@@ -24,11 +28,16 @@
       clip-path: var(--star-shape);
     }
 
-    &::before { inset: 0; background: var(--star); }
+    &::before { inset: 0; background: var(--muted); opacity: 0.3; }
     &::after  { inset: var(--teacher-star-outline); background: #fff; }
+
+    &--active::before { background: var(--star); opacity: 1; }
   }
 
-  &__name { font-size: 40px; font-weight: 400; }
+  &__name {
+    font-size: 40px;
+    font-weight: 400;
+  }
 
   &__speciality {
     margin-top: var(--space-8);

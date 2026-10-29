@@ -1,3 +1,32 @@
 {
-  "teachers": []
+  "teachers": [
+    {
+      "id": "1b6c895e-b1bd-4c70-8f44-e29d7db35600",
+      "fullName": "Йцукен Фвапр",
+      "gender": "Female",
+      "title": null,
+      "city": "12345678",
+      "state": "ФІВАПРО",
+      "country": "Antigua and Barbuda",
+      "postcode": null,
+      "coordinates": {
+        "latitude": null,
+        "longitude": null
+      },
+      "timezone": {
+        "offset": null,
+        "description": null
+      },
+      "email": "valeriiiafrol@gmail.com",
+      "birthDate": "2000-12-31",
+      "age": 25,
+      "phone": "12345678",
+      "pictureLarge": null,
+      "pictureThumbnail": null,
+      "favorite": true,
+      "course": "Mathematics",
+      "bgColor": "#ffffff",
+      "note": ""
+    }
+  ]
 }

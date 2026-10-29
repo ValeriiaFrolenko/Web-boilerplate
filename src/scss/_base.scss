@@ -4,14 +4,17 @@
 *::before,
 *::after { box-sizing: border-box; }
 
+html { overflow-anchor: none; }
+
 body {
   margin: 0;
   font: 16px/20px "Source Sans Pro", Arial, sans-serif;
   color: var(--text);
   background: var(--bg-page);
+  overflow-anchor: none;
 }
 
-body:has(.modal:target) { overflow: hidden; }
+body:has(.modal) { overflow: hidden; }
 
 h1, h2, h3 {
   margin: 0;

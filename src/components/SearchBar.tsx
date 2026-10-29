@@ -12,36 +12,43 @@ interface SearchBarProps {
 const AGE_OPERATORS: AgeOperator[] = ['=', '>', '<', '>=', '<='];
 
 const SearchBar = ({
-                       field,
-                       query,
-                       ageOperator,
-                       onFieldChange,
-                       onQueryChange,
-                       onAgeOperatorChange,
-                   }: SearchBarProps) => {
+    field,
+    query,
+    ageOperator,
+    onFieldChange,
+    onQueryChange,
+    onAgeOperatorChange,
+}: SearchBarProps) => {
     return (
-        <div className="search-bar">
-            <select value={field} onChange={(e) => onFieldChange(e.target.value as FindUserField)}>
-                <option value="name">Ім'я</option>
-                <option value="note">Коментар</option>
-                <option value="age">Вік</option>
+        <div className="search">
+            <select
+                className="search__select"
+                value={field}
+                onChange={(e) => onFieldChange(e.target.value as FindUserField)}
+            >
+                <option value="name">Name</option>
+                <option value="note">Note</option>
+                <option value="age">Age</option>
             </select>
 
             {field === 'age' && (
-                <select value={ageOperator} onChange={(e) => onAgeOperatorChange(e.target.value as AgeOperator)}>
+                <select
+                    className="search__select"
+                    value={ageOperator}
+                    onChange={(e) => onAgeOperatorChange(e.target.value as AgeOperator)}
+                >
                     {AGE_OPERATORS.map((op) => (
-                        <option key={op} value={op}>
-                            {op}
-                        </option>
+                        <option key={op} value={op}>{op}</option>
                     ))}
                 </select>
             )}
 
             <input
-                type={field === 'age' ? 'number' : 'text'}
+                className="search__input"
+                type={field === 'age' ? 'number' : 'search'}
                 value={query}
                 onChange={(e) => onQueryChange(e.target.value)}
-                placeholder="Пошук..."
+                placeholder="Name, note or age to search"
             />
         </div>
     );

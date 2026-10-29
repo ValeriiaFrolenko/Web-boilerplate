@@ -3,51 +3,73 @@ import type { User } from '../logic/types';
 interface TeacherDetailsModalProps {
     user: User;
     onClose: () => void;
+    onToggleFavorite: (userId: string) => void;
 }
 
-const formatDate = (iso: string | null): string => {
-    if (iso === null) return '—';
-    return new Date(iso).toLocaleDateString('uk-UA');
-};
+const TeacherDetailsModal = ({ user, onClose, onToggleFavorite }: TeacherDetailsModalProps) => {
+    const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
+        if (e.target === e.currentTarget) onClose();
+    };
 
-const TeacherDetailsModal = ({ user, onClose }: TeacherDetailsModalProps) => {
+    const location = [user.city, user.country].filter((v): v is string => v !== null).join(', ');
+    const ageGender = [
+        user.age !== null ? String(user.age) : null,
+        user.gender,
+    ].filter((v): v is string => v !== null && v !== '').join(', ');
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-                <button type="button" className="modal__close" onClick={onClose}>
-                    ×
-                </button>
+        <div className="modal" onMouseDown={handleOverlayMouseDown}>
+            <div className="modal__window">
+                <div className="modal__header">
+                    <h2 className="modal__title">Teacher Info</h2>
+                    <button
+                        type="button"
+                        className="modal__close"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+                </div>
 
-                <img src={user.pictureLarge ?? undefined} alt={user.fullName} className="modal__photo" />
+                <div className="modal__body teacher">
+                    <button
+                        type="button"
+                        className={`teacher__star ${user.favorite ? 'teacher__star--active' : ''}`}
+                        onClick={() => onToggleFavorite(user.id)}
+                        aria-label={user.favorite ? 'Remove from favorites' : 'Add to favorites'}
+                    />
 
-                <h2>{user.fullName}</h2>
-                <p className="modal__course">{user.course}</p>
+                    {user.pictureLarge !== null && (
+                        <img
+                            className="teacher__photo"
+                            src={user.pictureLarge}
+                            alt={user.fullName}
+                            width={325}
+                            height={319}
+                        />
+                    )}
 
-                <dl className="modal__details">
-                    <dt>Стать</dt>
-                    <dd>{user.gender ?? '—'}</dd>
+                    <h3 className="teacher__name">{user.fullName}</h3>
+                    <p className="teacher__speciality">{user.course}</p>
 
-                    <dt>Вік</dt>
-                    <dd>{user.age ?? '—'}</dd>
+                    <ul className="teacher__facts">
+                        {location !== '' && <li>{location}</li>}
+                        {ageGender !== '' && <li>{ageGender}</li>}
+                        {user.email !== null && (
+                            <li>
+                                <a href={`mailto:${user.email}`}>{user.email}</a>
+                            </li>
+                        )}
+                        {user.phone !== null && (
+                            <li>
+                                <a href={`tel:${user.phone}`}>{user.phone}</a>
+                            </li>
+                        )}
+                    </ul>
 
-                    <dt>Дата народження</dt>
-                    <dd>{formatDate(user.birthDate)}</dd>
-
-                    <dt>Країна</dt>
-                    <dd>{user.country}</dd>
-
-                    <dt>Місто</dt>
-                    <dd>{user.city ?? '—'}</dd>
-
-                    <dt>Email</dt>
-                    <dd>{user.email ?? '—'}</dd>
-
-                    <dt>Телефон</dt>
-                    <dd>{user.phone ?? '—'}</dd>
-
-                    <dt>Коментар</dt>
-                    <dd>{user.note || '—'}</dd>
-                </dl>
+                    {user.note !== '' && <p className="teacher__notes">{user.note}</p>}
+                </div>
             </div>
         </div>
     );

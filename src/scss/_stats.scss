@@ -1,6 +1,33 @@
 @use "tokens" as *;
 @use "mixins" as *;
 
+.stats-panel {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__value {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+
+  &__label {
+    margin-top: var(--space-1);
+    font-size: 13px;
+    color: var(--label);
+  }
+}
+
 .stats {
   width: 100%;
   margin-top: var(--space-10);
@@ -13,6 +40,11 @@
     font-weight: 400;
     text-align: center;
     border-bottom: 1px solid var(--text);
+  }
+
+  &__sortable {
+    cursor: pointer;
+    user-select: none;
     transition: background .2s;
 
     &:hover,
@@ -30,13 +62,26 @@
   }
 
   th:nth-child(1) { width: 23%; }
-  th:nth-child(2) { width: 23%; }
-  th:nth-child(3) { width: 14%; }
+  th:nth-child(2) { width: 20%; }
+  th:nth-child(3) { width: 10%; }
   th:nth-child(4) { width: 17%; }
-  th:nth-child(5) { width: 23%; }
+  th:nth-child(5) { width: 10%; }
+  th:nth-child(6) { width: 20%; }
+
+  &__row {
+    cursor: pointer;
+
+    &:hover { background: var(--bg-row-hover); }
+  }
 
   tbody tr:nth-child(even) { background: var(--bg-stripe); }
   tbody tr:hover           { background: var(--bg-row-hover); }
+
+  &__empty {
+    text-align: center;
+    color: var(--muted);
+    padding: var(--space-8);
+  }
 
   &__arrow {
     display: inline-block;
@@ -52,20 +97,52 @@
 
 .pagination {
   display: flex;
-  gap: var(--space-8);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-6);
   margin-top: var(--space-8);
   padding-left: var(--space-5);
 
-  &__link:hover { color: var(--accent); }
+  &__link {
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+
+    &:hover { color: var(--accent); }
+
+    &--active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
   &__dots { margin-left: calc(var(--space-2) * -1); }
+
+  &__next { margin-left: auto; }
 }
 
 @include mobile {
+  .stats-panel {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .stats {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
   }
 
-  .pagination { padding-left: 0; }
+  .pagination {
+    padding-left: 0;
+
+    &__next { margin-left: 0; }
+  }
 }

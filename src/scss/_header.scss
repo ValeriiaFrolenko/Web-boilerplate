@@ -44,16 +44,25 @@
 }
 
 .search {
-  @include flex-center(var(--space-5));
+  @include flex-center(var(--space-3));
+  flex-wrap: wrap;
+  justify-content: flex-end;
 
   &__input {
-    width: 400px;
+    width: 320px;
     height: var(--input-h);
     padding: 0 var(--space-4);
     border: var(--border-input);
     border-radius: var(--radius);
 
     &::placeholder { color: var(--label); }
+  }
+
+  &__select {
+    height: var(--input-h);
+    padding: 0 var(--space-2);
+    border: var(--border-input);
+    border-radius: var(--radius);
   }
 }
 
@@ -94,11 +103,9 @@
 
   .search {
     width: 100%;
+    justify-content: flex-start;
 
-    &__input {
-      width: 100%;
-      min-width: 0;
-    }
+    &__input { width: 100%; min-width: 0; }
   }
 
   .nav {

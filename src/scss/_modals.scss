@@ -2,21 +2,18 @@
 @use "mixins" as *;
 
 .modal {
-  display: none;
   position: fixed;
   inset: 0;
   z-index: 10;
+  display: flex;
   padding: var(--space-5);
   overflow-y: auto;
   background: var(--bg-backdrop);
 
-  &:target {
-    display: flex;
-
-    .modal__window { animation: modal-in .2s ease-out; }
+  &__backdrop {
+    position: absolute;
+    inset: 0;
   }
-
-  &__backdrop { position: absolute; inset: 0; }
 
   &__window {
     position: relative;
@@ -25,6 +22,7 @@
     margin: auto;
     background: #fff;
     border-radius: var(--radius);
+    animation: modal-in .2s ease-out;
 
     &--form { width: 560px; }
   }
@@ -44,10 +42,14 @@
   }
 
   &__close {
+    padding: 0;
     font-size: 34px;
     font-weight: 600;
     line-height: 1;
     color: #fff;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
 
     &:hover { color: var(--accent); }
   }

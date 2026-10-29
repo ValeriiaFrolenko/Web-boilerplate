@@ -12,6 +12,7 @@
 
   &__input {
     @include form-control;
+    width: 100%;
     margin-bottom: var(--space-4);
     padding: 0 var(--space-2);
 
@@ -82,13 +83,25 @@
     padding: var(--space-2) var(--space-3);
     resize: vertical;
   }
+
+  &__error {
+    margin-bottom: var(--space-4);
+    color: var(--accent-dark);
+    font-size: 13px;
+  }
+
+  &__field-error {
+    display: block;
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-4);
+    color: var(--accent-dark);
+    font-size: 12px;
+  }
 }
 
 a {
   &[href^="mailto"],
   &[href^="tel"] { color: var(--link); }
-
-  &[href="#!"] { cursor: pointer; }
 }
 
 @include mobile {

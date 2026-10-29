@@ -10,15 +10,18 @@ import type {
 import filterUsers from './logic/filterUsers';
 import sortUsers from './logic/sortUsers';
 import findUser from './logic/findUser';
-import { fetchValidUsers, postTeacher } from './api/randomUserApi';
+import getMatchPercentage from './logic/getMatchPercentage';
+import mergeUsers from './logic/mergeUsers';
+import { fetchValidUsers, fetchSavedTeachers, postTeacher } from './api/randomUserApi';
 
-import FilterPanel from './components/FilterPanel';
-import SearchBar from './components/SearchBar';
-import StatisticsPanel from './components/StatisticsPanel';
-import TeacherTable from './components/TeacherTable';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import TeachersSection from './components/TeachersSection';
+import StatisticsSection from './components/StatisticsSection';
+import FavoritesSection from './components/FavoritesSection';
+import AboutSection from './components/AboutSection';
 import TeacherDetailsModal from './components/TeacherDetailsModal';
 import AddTeacherModal from './components/AddTeacherModal';
-import Pagination from './components/Pagination';
 
 const INITIAL_LOAD = 50;
 const PAGE_SIZE = 10;
@@ -49,9 +52,12 @@ const App = () => {
             setIsLoading(true);
             setError(null);
             try {
-                const loaded = await fetchValidUsers(INITIAL_LOAD);
+                const [savedUsers, apiUsers] = await Promise.all([
+                    fetchSavedTeachers().catch((): User[] => []),
+                    fetchValidUsers(INITIAL_LOAD),
+                ]);
                 if (cancelled) return;
-                setUsers(loaded);
+                setUsers(mergeUsers(savedUsers, apiUsers));
             } catch (err) {
                 if (cancelled) return;
                 setError(err instanceof Error ? err.message : 'Failed to load users');
@@ -61,9 +67,7 @@ const App = () => {
         };
 
         void load();
-        return () => {
-            cancelled = true;
-        };
+        return () => { cancelled = true; };
     }, [reloadKey]);
 
     const visibleUsers = useMemo(() => {
@@ -74,65 +78,77 @@ const App = () => {
         return sortUsers(result, sortField, sortDirection);
     }, [users, filters, sortField, sortDirection, searchField, searchQuery, searchAgeOperator]);
 
+    const matchPercent = useMemo(() => {
+        if (searchQuery.trim() === '') return null;
+        return getMatchPercentage(users, searchField, searchQuery, searchAgeOperator);
+    }, [users, searchField, searchQuery, searchAgeOperator]);
+
+    const availableCountries = useMemo(() => {
+        const set = new Set<string>();
+        for (const u of users) {
+            if (u.country !== '' && u.country !== 'Unknown') set.add(u.country);
+        }
+        return Array.from(set).sort((a, b) => a.localeCompare(b));
+    }, [users]);
+
     const selectedUser = useMemo(
         () => users.find((user) => user.id === selectedUserId) ?? null,
         [users, selectedUserId],
     );
 
-    const totalPages = Math.max(1, Math.ceil(visibleUsers.length / PAGE_SIZE));
+    const pageCount = Math.max(1, Math.ceil(visibleUsers.length / PAGE_SIZE));
     const pageStart = (currentPage - 1) * PAGE_SIZE;
-    const pageUsers = visibleUsers.slice(pageStart, pageStart + PAGE_SIZE);
+    const pageUsers = useMemo(
+        () => visibleUsers.slice(pageStart, pageStart + PAGE_SIZE),
+        [visibleUsers, pageStart],
+    );
 
-    const resetPage = useCallback(() => setCurrentPage(1), []);
-
-    const handleFiltersChange = (next: FilterCriteria): void => {
+    const handleFiltersChange = useCallback((next: FilterCriteria): void => {
         setFilters(next);
-        resetPage();
-    };
+        setCurrentPage(1);
+    }, []);
 
-    const handleSearchFieldChange = (next: FindUserField): void => {
+    const handleSearchFieldChange = useCallback((next: FindUserField): void => {
         setSearchField(next);
-        resetPage();
-    };
+        setCurrentPage(1);
+    }, []);
 
-    const handleSearchQueryChange = (next: string): void => {
+    const handleSearchQueryChange = useCallback((next: string): void => {
         setSearchQuery(next);
-        resetPage();
-    };
+        setCurrentPage(1);
+    }, []);
 
-    const handleSearchAgeOperatorChange = (next: AgeOperator): void => {
+    const handleSearchAgeOperatorChange = useCallback((next: AgeOperator): void => {
         setSearchAgeOperator(next);
-        resetPage();
-    };
+        setCurrentPage(1);
+    }, []);
 
-    const handleSort = (field: SortField): void => {
+    const handleSort = useCallback((field: SortField): void => {
         if (field === sortField) {
             setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
         } else {
             setSortField(field);
             setSortDirection('asc');
         }
-        resetPage();
-    };
+    }, [sortField]);
 
-    const handleToggleFavorite = (userId: string): void => {
+    const handleToggleFavorite = useCallback((userId: string): void => {
         setUsers((prev) =>
-            prev.map((user) => (user.id === userId ? { ...user, favorite: !user.favorite } : user)),
+            prev.map((u) => (u.id === userId ? { ...u, favorite: !u.favorite } : u)),
         );
-    };
+    }, []);
 
-    const handleAddUser = async (newUser: User): Promise<void> => {
+    const handleAddUser = useCallback(async (newUser: User): Promise<void> => {
         const saved = await postTeacher(newUser);
         setUsers((prev) => [saved, ...prev]);
-        resetPage();
+        setCurrentPage(1);
         setAddModalOpen(false);
-    };
+    }, []);
 
-    const handleNext = async (): Promise<void> => {
+    const handleNext = useCallback(async (): Promise<void> => {
         if (isFetchingMore) return;
 
-        const hasMoreVisible = pageStart + PAGE_SIZE < visibleUsers.length;
-        if (hasMoreVisible) {
+        if (pageStart + PAGE_SIZE < visibleUsers.length) {
             setCurrentPage((p) => p + 1);
             return;
         }
@@ -147,77 +163,121 @@ const App = () => {
         } finally {
             setIsFetchingMore(false);
         }
-    };
+    }, [isFetchingMore, pageStart, visibleUsers.length]);
 
-    const handlePrev = (): void => {
-        if (currentPage > 1) setCurrentPage((p) => p - 1);
-    };
+    const handlePrev = useCallback((): void => {
+        setCurrentPage((p) => (p > 1 ? p - 1 : p));
+    }, []);
+
+    const handlePageChange = useCallback((page: number): void => {
+        setCurrentPage(Math.max(1, Math.min(page, pageCount)));
+    }, [pageCount]);
+
+    const handleCloseDetails = useCallback((): void => {
+        setSelectedUserId(null);
+    }, []);
+
+    const handleOpenAddModal = useCallback((): void => {
+        setAddModalOpen(true);
+    }, []);
+
+    const handleCloseAddModal = useCallback((): void => {
+        setAddModalOpen(false);
+    }, []);
 
     return (
-        <div className="app">
-            <header className="app__header">
-                <h1>Пошук викладачів</h1>
-                <button type="button" className="button button--primary" onClick={() => setAddModalOpen(true)}>
-                    Додати викладача
-                </button>
-            </header>
+        <div className="sheet">
+            <Header
+                searchField={searchField}
+                searchQuery={searchQuery}
+                searchAgeOperator={searchAgeOperator}
+                onSearchFieldChange={handleSearchFieldChange}
+                onSearchQueryChange={handleSearchQueryChange}
+                onSearchAgeOperatorChange={handleSearchAgeOperatorChange}
+                onAddTeacherClick={handleOpenAddModal}
+            />
 
-            {error && (
-                <div className="app__error">
-                    <span>{error}</span>
-                    {users.length === 0 && (
-                        <button type="button" className="button" onClick={() => setReloadKey((k) => k + 1)}>
-                            Спробувати ще раз
-                        </button>
-                    )}
-                </div>
-            )}
+            <div className="divider" />
 
-            {isLoading ? (
-                <div className="app__status">Завантаження користувачів…</div>
-            ) : (
-                <>
-                    <StatisticsPanel users={users} visibleUsers={visibleUsers} />
-
-                    <div className="app__controls">
-                        <FilterPanel filters={filters} onChange={handleFiltersChange} />
-                        <SearchBar
-                            field={searchField}
-                            query={searchQuery}
-                            ageOperator={searchAgeOperator}
-                            onFieldChange={handleSearchFieldChange}
-                            onQueryChange={handleSearchQueryChange}
-                            onAgeOperatorChange={handleSearchAgeOperatorChange}
-                        />
+            <main id="top">
+                {error !== null && (
+                    <div className="wrap">
+                        <p className="cards__empty">
+                            {error}
+                            {users.length === 0 && (
+                                <button
+                                    type="button"
+                                    className="btn"
+                                    style={{ marginLeft: 12 }}
+                                    onClick={() => setReloadKey((k) => k + 1)}
+                                >
+                                    Retry
+                                </button>
+                            )}
+                        </p>
                     </div>
+                )}
 
-                    <TeacherTable
-                        users={pageUsers}
-                        sortField={sortField}
-                        sortDirection={sortDirection}
-                        onSort={handleSort}
-                        onSelect={setSelectedUserId}
-                        onToggleFavorite={handleToggleFavorite}
-                    />
+                {isLoading ? (
+                    <div className="wrap">
+                        <p className="cards__empty">Loading teachers…</p>
+                    </div>
+                ) : (
+                    <>
+                        <TeachersSection
+                            filters={filters}
+                            onFiltersChange={handleFiltersChange}
+                            users={visibleUsers}
+                            countries={availableCountries}
+                            onSelectUser={setSelectedUserId}
+                        />
 
-                    <Pagination
-                        currentPage={currentPage}
-                        pageCount={totalPages}
-                        visibleCount={visibleUsers.length}
-                        canPrev={currentPage > 1}
-                        isLoadingNext={isFetchingMore}
-                        onPrev={handlePrev}
-                        onNext={handleNext}
-                    />
-                </>
-            )}
+                        <div className="divider" />
 
-            {selectedUser && (
-                <TeacherDetailsModal user={selectedUser} onClose={() => setSelectedUserId(null)} />
+                        <StatisticsSection
+                            users={users}
+                            visibleUsers={visibleUsers}
+                            pageUsers={pageUsers}
+                            matchPercent={matchPercent}
+                            sortField={sortField}
+                            sortDirection={sortDirection}
+                            onSort={handleSort}
+                            onSelectUser={setSelectedUserId}
+                            currentPage={currentPage}
+                            pageCount={pageCount}
+                            canPrev={currentPage > 1}
+                            isLoadingNext={isFetchingMore}
+                            onPrev={handlePrev}
+                            onNext={handleNext}
+                            onPageChange={handlePageChange}
+                        />
+
+                        <div className="divider" />
+
+                        <FavoritesSection users={users} onSelectUser={setSelectedUserId} />
+
+                        <div className="divider" />
+
+                        <AboutSection />
+                    </>
+                )}
+            </main>
+
+            <Footer onAddTeacherClick={handleOpenAddModal} />
+
+            {selectedUser !== null && (
+                <TeacherDetailsModal
+                    user={selectedUser}
+                    onClose={handleCloseDetails}
+                    onToggleFavorite={handleToggleFavorite}
+                />
             )}
 
             {isAddModalOpen && (
-                <AddTeacherModal onClose={() => setAddModalOpen(false)} onSubmit={handleAddUser} />
+                <AddTeacherModal
+                    onClose={handleCloseAddModal}
+                    onSubmit={handleAddUser}
+                />
             )}
         </div>
     );

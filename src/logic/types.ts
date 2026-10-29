@@ -83,9 +83,10 @@ export interface FilterCriteria {
     age?: AgeRange;
     gender?: string;
     favorite?: boolean;
+    hasPhoto?: boolean;
 }
 
-export type SortField = 'fullName' | 'age' | 'birthDate' | 'country' | 'course';
+export type SortField = 'fullName' | 'age' | 'birthDate' | 'country' | 'course' | 'gender';
 export type SortDirection = 'asc' | 'desc';
 
 export type FindUserField = 'name' | 'note' | 'age';

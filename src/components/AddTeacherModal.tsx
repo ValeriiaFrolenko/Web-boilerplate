@@ -2,7 +2,7 @@ import { useEffect, useState, type SubmitEvent } from 'react';
 import type { TypedUserFields, User, ValidationError } from '../logic/types';
 import { constructUserFromForm } from '../logic/buildUser';
 import validateUser from '../logic/validateUser';
-import { parseNumberOrNull, parseStringOrNull, COURSES } from '../logic/normalizeUser';
+import { parseStringOrNull, parsePhone, COURSES } from '../logic/normalizeUser';
 import { countries } from 'countries-list';
 
 const COUNTRY_OPTIONS: string[] = Object.values(countries)
@@ -20,13 +20,12 @@ interface FormState {
     country: string;
     city: string;
     state: string;
-    age: string;
     birthDate: string;
     email: string;
     phone: string;
-    note: string;
     course: string;
     bgColor: string;
+    note: string;
     favorite: boolean;
 }
 
@@ -36,14 +35,26 @@ const EMPTY_FORM: FormState = {
     country: '',
     city: '',
     state: '',
-    age: '',
     birthDate: '',
     email: '',
     phone: '',
-    note: '',
     course: COURSES[0],
     bgColor: '#ffffff',
+    note: '',
     favorite: false,
+};
+
+const computeAge = (birthDate: string): number | null => {
+    if (birthDate === '') return null;
+    const dob = new Date(birthDate);
+    if (Number.isNaN(dob.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age -= 1;
+    }
+    return age;
 };
 
 const toTypedFields = (form: FormState): TypedUserFields => ({
@@ -61,9 +72,9 @@ const toTypedFields = (form: FormState): TypedUserFields => ({
 
     email: parseStringOrNull(form.email),
     birthDate: form.birthDate === '' ? null : form.birthDate,
-    age: parseNumberOrNull(form.age),
+    age: computeAge(form.birthDate),
 
-    phone: parseStringOrNull(form.phone),
+    phone: parsePhone(form.phone),
     pictureLarge: null,
     pictureThumbnail: null,
 
@@ -75,8 +86,7 @@ const toTypedFields = (form: FormState): TypedUserFields => ({
 
 type StringField =
     | 'fullName' | 'gender' | 'country' | 'city' | 'state'
-    | 'age' | 'birthDate' | 'email' | 'phone' | 'note'
-    | 'course' | 'bgColor';
+    | 'birthDate' | 'email' | 'phone' | 'note' | 'course' | 'bgColor';
 
 const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
     const [form, setForm] = useState<FormState>(EMPTY_FORM);
@@ -95,8 +105,8 @@ const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
         setForm((prev) => ({ ...prev, [field]: value }));
     };
 
-    const updateFavorite = (value: boolean): void => {
-        setForm((prev) => ({ ...prev, favorite: value }));
+    const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
+        if (e.target === e.currentTarget) onClose();
     };
 
     const handleSubmit = async (e: SubmitEvent): Promise<void> => {
@@ -119,108 +129,197 @@ const AddTeacherModal = ({ onClose, onSubmit }: AddTeacherModalProps) => {
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <form className="modal modal--form" onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit}>
-                <button type="button" className="modal__close" onClick={onClose}>
-                    ×
-                </button>
+        <div className="modal" onMouseDown={handleOverlayMouseDown}>
+            <div className="modal__window modal__window--form">
+                <div className="modal__header">
+                    <h2 className="modal__title">Add Teacher</h2>
+                    <button
+                        type="button"
+                        className="modal__close"
+                        onClick={onClose}
+                        aria-label="Close"
+                    >
+                        ×
+                    </button>
+                </div>
 
-                <h2>Додати викладача</h2>
+                <form className="modal__body form" onSubmit={handleSubmit}>
+                    <label className="form__label" htmlFor="add-name">Name</label>
+                    <input
+                        className="form__input"
+                        id="add-name"
+                        type="text"
+                        placeholder="Enter name"
+                        value={form.fullName}
+                        onChange={(e) => updateString('fullName', e.target.value)}
+                    />
+                    {errorFor('fullName') !== null && (
+                        <span className="form__field-error">{errorFor('fullName')}</span>
+                    )}
 
-                <label>
-                    Повне ім'я
-                    <input value={form.fullName} onChange={(e) => updateString('fullName', e.target.value)} />
-                    {errorFor('fullName') && <span className="form-error">{errorFor('fullName')}</span>}
-                </label>
-
-                <label>
-                    Стать
-                    <select value={form.gender} onChange={(e) => updateString('gender', e.target.value)}>
-                        <option value="">Оберіть стать</option>
-                        <option value="Male">Чоловіча</option>
-                        <option value="Female">Жіноча</option>
-                    </select>
-                    {errorFor('gender') && <span className="form-error">{errorFor('gender')}</span>}
-                </label>
-
-                <label>
-                    Країна
-                    <select value={form.country} onChange={(e) => updateString('country', e.target.value)}>
-                        <option value="">Оберіть країну</option>
-                        {COUNTRY_OPTIONS.map((name) => (
-                            <option key={name} value={name}>{name}</option>
-                        ))}
-                    </select>
-                    {errorFor('country') && <span className="form-error">{errorFor('country')}</span>}
-                </label>
-
-                <label>
-                    Місто
-                    <input value={form.city} onChange={(e) => updateString('city', e.target.value)} />
-                    {errorFor('city') && <span className="form-error">{errorFor('city')}</span>}
-                </label>
-
-                <label>
-                    Область / штат
-                    <input value={form.state} onChange={(e) => updateString('state', e.target.value)} />
-                    {errorFor('state') && <span className="form-error">{errorFor('state')}</span>}
-                </label>
-
-                <label>
-                    Вік
-                    <input type="number" value={form.age} onChange={(e) => updateString('age', e.target.value)} />
-                    {errorFor('age') && <span className="form-error">{errorFor('age')}</span>}
-                </label>
-
-                <label>
-                    Дата народження
-                    <input type="date" value={form.birthDate} onChange={(e) => updateString('birthDate', e.target.value)} />
-                    {errorFor('birthDate') && <span className="form-error">{errorFor('birthDate')}</span>}
-                </label>
-
-                <label>
-                    Email
-                    <input value={form.email} onChange={(e) => updateString('email', e.target.value)} />
-                    {errorFor('email') && <span className="form-error">{errorFor('email')}</span>}
-                </label>
-
-                <label>
-                    Телефон (тільки цифри)
-                    <input value={form.phone} onChange={(e) => updateString('phone', e.target.value)} />
-                    {errorFor('phone') && <span className="form-error">{errorFor('phone')}</span>}
-                </label>
-
-                <label>
-                    Спеціальність
-                    <select value={form.course} onChange={(e) => updateString('course', e.target.value)}>
+                    <label className="form__label" htmlFor="add-specialty">Specialty</label>
+                    <select
+                        className="form__input"
+                        id="add-specialty"
+                        value={form.course}
+                        onChange={(e) => updateString('course', e.target.value)}
+                    >
                         {COURSES.map((course) => (
                             <option key={course} value={course}>{course}</option>
                         ))}
                     </select>
-                </label>
 
-                <label>
-                    Колір фону
-                    <input type="color" value={form.bgColor} onChange={(e) => updateString('bgColor', e.target.value)} />
-                </label>
+                    <div className="form__row">
+                        <div>
+                            <label className="form__label" htmlFor="add-country">Country</label>
+                            <select
+                                className="form__input"
+                                id="add-country"
+                                value={form.country}
+                                onChange={(e) => updateString('country', e.target.value)}
+                            >
+                                <option value="">Select country</option>
+                                {COUNTRY_OPTIONS.map((name) => (
+                                    <option key={name} value={name}>{name}</option>
+                                ))}
+                            </select>
+                            {errorFor('country') !== null && (
+                                <span className="form__field-error">{errorFor('country')}</span>
+                            )}
+                        </div>
+                        <div>
+                            <label className="form__label" htmlFor="add-city">City</label>
+                            <input
+                                className="form__input"
+                                id="add-city"
+                                type="text"
+                                value={form.city}
+                                onChange={(e) => updateString('city', e.target.value)}
+                            />
+                            {errorFor('city') !== null && (
+                                <span className="form__field-error">{errorFor('city')}</span>
+                            )}
+                        </div>
+                    </div>
 
-                <label>
-                    Обране
-                    <input type="checkbox" checked={form.favorite} onChange={(e) => updateFavorite(e.target.checked)} />
-                </label>
+                    <label className="form__label" htmlFor="add-state">State / Region</label>
+                    <input
+                        className="form__input"
+                        id="add-state"
+                        type="text"
+                        value={form.state}
+                        onChange={(e) => updateString('state', e.target.value)}
+                    />
+                    {errorFor('state') !== null && (
+                        <span className="form__field-error">{errorFor('state')}</span>
+                    )}
 
-                <label>
-                    Коментар
-                    <input value={form.note} onChange={(e) => updateString('note', e.target.value)} />
-                    {errorFor('note') && <span className="form-error">{errorFor('note')}</span>}
-                </label>
+                    <div className="form__row">
+                        <div>
+                            <label className="form__label" htmlFor="add-email">Email</label>
+                            <input
+                                className="form__input"
+                                id="add-email"
+                                type="email"
+                                value={form.email}
+                                onChange={(e) => updateString('email', e.target.value)}
+                            />
+                            {errorFor('email') !== null && (
+                                <span className="form__field-error">{errorFor('email')}</span>
+                            )}
+                        </div>
+                        <div>
+                            <label className="form__label" htmlFor="add-phone">Phone</label>
+                            <input
+                                className="form__input"
+                                id="add-phone"
+                                type="tel"
+                                value={form.phone}
+                                onChange={(e) => updateString('phone', e.target.value)}
+                            />
+                            {errorFor('phone') !== null && (
+                                <span className="form__field-error">{errorFor('phone')}</span>
+                            )}
+                        </div>
+                    </div>
 
-                {submitError && <p className="form-error">{submitError}</p>}
+                    <label className="form__label" htmlFor="add-birth">Date of birth</label>
+                    <input
+                        className="form__input form__input--half"
+                        id="add-birth"
+                        type="date"
+                        value={form.birthDate}
+                        onChange={(e) => updateString('birthDate', e.target.value)}
+                    />
+                    {errorFor('birthDate') !== null && (
+                        <span className="form__field-error">{errorFor('birthDate')}</span>
+                    )}
 
-                <button type="submit" className="button button--primary" disabled={isSubmitting}>
-                    {isSubmitting ? 'Збереження…' : 'Додати'}
-                </button>
-            </form>
+                    <fieldset className="form__sex">
+                        <legend className="form__label">Sex</legend>
+                        <label className="form__radio">
+                            <input
+                                type="radio"
+                                name="sex"
+                                value="Male"
+                                checked={form.gender === 'Male'}
+                                onChange={(e) => updateString('gender', e.target.value)}
+                            />
+                            Male
+                        </label>
+                        <label className="form__radio">
+                            <input
+                                type="radio"
+                                name="sex"
+                                value="Female"
+                                checked={form.gender === 'Female'}
+                                onChange={(e) => updateString('gender', e.target.value)}
+                            />
+                            Female
+                        </label>
+                    </fieldset>
+                    {errorFor('gender') !== null && (
+                        <span className="form__field-error">{errorFor('gender')}</span>
+                    )}
+
+                    <div className="form__color">
+                        <label className="form__label" htmlFor="add-color">Background color</label>
+                        <input
+                            id="add-color"
+                            type="color"
+                            value={form.bgColor}
+                            onChange={(e) => updateString('bgColor', e.target.value)}
+                        />
+                    </div>
+
+                    <label className="form__radio">
+                        <input
+                            type="checkbox"
+                            checked={form.favorite}
+                            onChange={(e) => setForm((prev) => ({ ...prev, favorite: e.target.checked }))}
+                        />
+                        Add to favorites
+                    </label>
+
+                    <label className="form__label" htmlFor="add-notes">Notes (optional)</label>
+                    <textarea
+                        className="form__input form__textarea"
+                        id="add-notes"
+                        rows={5}
+                        value={form.note}
+                        onChange={(e) => updateString('note', e.target.value)}
+                    />
+                    {errorFor('note') !== null && (
+                        <span className="form__field-error">{errorFor('note')}</span>
+                    )}
+
+                    {submitError !== null && <p className="form__error">{submitError}</p>}
+
+                    <button className="btn btn--submit" type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? 'Saving…' : 'Add'}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
