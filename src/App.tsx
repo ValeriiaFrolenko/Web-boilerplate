@@ -10,7 +10,6 @@ import type {
 import filterUsers from './logic/filterUsers';
 import sortUsers from './logic/sortUsers';
 import findUser from './logic/findUser';
-import getMatchPercentage from './logic/getMatchPercentage';
 import mergeUsers from './logic/mergeUsers';
 import { fetchValidUsers, fetchSavedTeachers, postTeacher } from './api/randomUserApi';
 
@@ -34,14 +33,13 @@ const App = () => {
     const [reloadKey, setReloadKey] = useState(0);
 
     const [filters, setFilters] = useState<FilterCriteria>({});
-    const [sortField, setSortField] = useState<SortField>('fullName');
-    const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+    const [sortField] = useState<SortField>('fullName');
+    const [sortDirection] = useState<SortDirection>('asc');
 
     const [searchField, setSearchField] = useState<FindUserField>('name');
     const [searchQuery, setSearchQuery] = useState('');
     const [searchAgeOperator, setSearchAgeOperator] = useState<AgeOperator>('=');
 
-    const [currentPage, setCurrentPage] = useState(1);
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const [isAddModalOpen, setAddModalOpen] = useState(false);
 
@@ -78,11 +76,6 @@ const App = () => {
         return sortUsers(result, sortField, sortDirection);
     }, [users, filters, sortField, sortDirection, searchField, searchQuery, searchAgeOperator]);
 
-    const matchPercent = useMemo(() => {
-        if (searchQuery.trim() === '') return null;
-        return getMatchPercentage(users, searchField, searchQuery, searchAgeOperator);
-    }, [users, searchField, searchQuery, searchAgeOperator]);
-
     const availableCountries = useMemo(() => {
         const set = new Set<string>();
         for (const u of users) {
@@ -96,41 +89,21 @@ const App = () => {
         [users, selectedUserId],
     );
 
-    const pageCount = Math.max(1, Math.ceil(visibleUsers.length / PAGE_SIZE));
-    const pageStart = (currentPage - 1) * PAGE_SIZE;
-    const pageUsers = useMemo(
-        () => visibleUsers.slice(pageStart, pageStart + PAGE_SIZE),
-        [visibleUsers, pageStart],
-    );
-
     const handleFiltersChange = useCallback((next: FilterCriteria): void => {
         setFilters(next);
-        setCurrentPage(1);
     }, []);
 
     const handleSearchFieldChange = useCallback((next: FindUserField): void => {
         setSearchField(next);
-        setCurrentPage(1);
     }, []);
 
     const handleSearchQueryChange = useCallback((next: string): void => {
         setSearchQuery(next);
-        setCurrentPage(1);
     }, []);
 
     const handleSearchAgeOperatorChange = useCallback((next: AgeOperator): void => {
         setSearchAgeOperator(next);
-        setCurrentPage(1);
     }, []);
-
-    const handleSort = useCallback((field: SortField): void => {
-        if (field === sortField) {
-            setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-        } else {
-            setSortField(field);
-            setSortDirection('asc');
-        }
-    }, [sortField]);
 
     const handleToggleFavorite = useCallback((userId: string): void => {
         setUsers((prev) =>
@@ -141,37 +114,22 @@ const App = () => {
     const handleAddUser = useCallback(async (newUser: User): Promise<void> => {
         const saved = await postTeacher(newUser);
         setUsers((prev) => [saved, ...prev]);
-        setCurrentPage(1);
         setAddModalOpen(false);
     }, []);
 
-    const handleNext = useCallback(async (): Promise<void> => {
+    const handleLoadMore = useCallback(async (): Promise<void> => {
         if (isFetchingMore) return;
-
-        if (pageStart + PAGE_SIZE < visibleUsers.length) {
-            setCurrentPage((p) => p + 1);
-            return;
-        }
 
         setIsFetchingMore(true);
         try {
             const loaded = await fetchValidUsers(PAGE_SIZE);
             setUsers((prev) => [...prev, ...loaded]);
-            setCurrentPage((p) => p + 1);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load more users');
         } finally {
             setIsFetchingMore(false);
         }
-    }, [isFetchingMore, pageStart, visibleUsers.length]);
-
-    const handlePrev = useCallback((): void => {
-        setCurrentPage((p) => (p > 1 ? p - 1 : p));
-    }, []);
-
-    const handlePageChange = useCallback((page: number): void => {
-        setCurrentPage(Math.max(1, Math.min(page, pageCount)));
-    }, [pageCount]);
+    }, [isFetchingMore]);
 
     const handleCloseDetails = useCallback((): void => {
         setSelectedUserId(null);
@@ -236,20 +194,8 @@ const App = () => {
 
                         <StatisticsSection
                             users={users}
-                            visibleUsers={visibleUsers}
-                            pageUsers={pageUsers}
-                            matchPercent={matchPercent}
-                            sortField={sortField}
-                            sortDirection={sortDirection}
-                            onSort={handleSort}
-                            onSelectUser={setSelectedUserId}
-                            currentPage={currentPage}
-                            pageCount={pageCount}
-                            canPrev={currentPage > 1}
                             isLoadingNext={isFetchingMore}
-                            onPrev={handlePrev}
-                            onNext={handleNext}
-                            onPageChange={handlePageChange}
+                            onNext={handleLoadMore}
                         />
 
                         <div className="divider" />

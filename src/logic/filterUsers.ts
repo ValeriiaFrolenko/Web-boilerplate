@@ -1,3 +1,4 @@
+import { filter } from 'lodash-es';
 import type { User, FilterCriteria } from './types';
 
 const equalsCaseInsensitive = (userValue: string | null, criterionValue: string): boolean => {
@@ -8,7 +9,7 @@ const equalsCaseInsensitive = (userValue: string | null, criterionValue: string)
 const filterUsers = (users: User[], criteria: FilterCriteria = {}): User[] => {
     const { country, age, gender, favorite, hasPhoto } = criteria;
 
-    return users.filter((user) => {
+    return filter(users, (user) => {
         if (country !== undefined && !equalsCaseInsensitive(user.country, country)) return false;
         if (gender !== undefined && !equalsCaseInsensitive(user.gender, gender)) return false;
         if (favorite !== undefined && user.favorite !== favorite) return false;
