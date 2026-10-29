@@ -1,0 +1,71 @@
+// ---------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------
+
+$bp-sm: 767.98px;
+
+$star-shape: polygon(
+        50% 0%, 61% 35%, 98% 35%, 68% 57%,
+        79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+);
+
+$spaces: (
+        1: 4px,   2: 8px,   3: 12px,  4: 16px,
+        5: 20px,  6: 24px,  8: 32px,  10: 40px,
+        12: 48px, 14: 56px, 16: 64px, 24: 96px,
+);
+
+// ---------------------------------------------------------------
+// Custom properties
+// ---------------------------------------------------------------
+
+:root {
+  --accent: #f75c48;
+  --accent-dark: #c54b36;
+  --text: #222;
+  --muted: #8a8a8a;
+  --label: #767676;
+  --star: #ecec02;
+  --link: #129a9d;
+
+  --bg-page: #fcfcfc;
+  --bg-stripe: #faf5fb;
+  --bg-row-hover: #fdeeea;
+  --bg-th-hover: #fafafa;
+  --bg-modal-header: #464648;
+  --bg-backdrop: rgb(0 0 0 / 60%);
+
+  --radius: 3px;
+  --border-input: 1px solid var(--label);
+
+  @each $step, $size in $spaces {
+    --space-#{$step}: #{$size};
+  }
+
+  --sheet: 1214px;
+  --content: 1000px;
+  --divider: 500px;
+
+  --card: 150px;
+  --card-sm: 120px;
+  --card-col: 200px;
+  --card-cols: 5;
+
+  --input-h: 40px;
+  --input-h-sm: 36px;
+  --input-h-md: 36px;
+  --btn-h-wide: 52px;
+  --btn-h-submit: 60px;
+  --modal-header-h: 64px;
+
+  --teacher-photo: 325px;
+  --textarea-h: 128px;
+
+  --star-w: 34px;
+  --star-h: 32px;
+  --teacher-star-w: 39px;
+  --teacher-star-h: 36px;
+  --teacher-star-outline: 4px;
+
+  --star-shape: #{$star-shape};
+}
