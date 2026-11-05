@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0126327e-cdf5-418f-a38b-6662183bc7d1" name="Changes" comment="feat: remove TeacherTable component and associated logic">
+      <change beforePath="$PROJECT_DIR$/.babelrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.stylelintrc.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/express.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/postcss.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/app.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/normalize.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fonts/Roboto.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/images/empty" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/test-module.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/robots.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scss/style.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="main" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;,
+      &quot;author&quot;: &quot;ValeriiaFrolenko&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;author&quot;: &quot;ValeriiaFrolenko&quot;
+  }
+}</component>
+  <component name="GitHubPullRequestState">{}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/ValeriiaFrolenko/Web-boilerplate.git&quot;,
+    &quot;accountId&quot;: &quot;26496de7-f417-4f7a-b91f-661b284e2ba1&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;ValeriiaFrolenko&quot;,
+    &quot;repository&quot;: &quot;Web-boilerplate&quot;
+  },
+  &quot;editorReviewEnabled&quot;: false
+}</component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.017619505605385" />
+      <entry key="MS500" value="2.163085167637953" />
+      <entry key="S2" value="5.90113794307315" />
+      <entry key="S5" value="8.371265452390976" />
+      <entry key="S10" value="9.5595736070295" />
+      <entry key="S30" value="10.647030523980597" />
+      <entry key="S60" value="11.5758827984929" />
+      <entry key="M2" value="14.996828734365149" />
+      <entry key="M5" value="24.593766291187748" />
+      <entry key="M10" value="32.0884581280265" />
+      <entry key="M15" value="35.787124257542686" />
+      <entry key="M30" value="42.88025515882035" />
+      <entry key="H1" value="54.78390834304977" />
+      <entry key="H2" value="71.68879047424613" />
+      <entry key="H4" value="89.77763969755536" />
+      <entry key="D1" value="155.6147608314712" />
+      <entry key="W1" value="208.7358255585169" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="1.122537233340302E-270" />
+      <entry key="S60" value="1.504801118862035E-135" />
+      <entry key="M2" value="6.8470604458625656E-68" />
+      <entry key="M5" value="3.0261308663805024E-27" />
+      <entry key="M10" value="1.0939748088396048E-13" />
+      <entry key="M15" value="3.62641441455007E-9" />
+      <entry key="M30" value="1.2036369768251347E-4" />
+      <entry key="H1" value="0.021938687370861118" />
+      <entry key="H2" value="0.29662743213250786" />
+      <entry key="H4" value="1.1275932475372485" />
+      <entry key="D1" value="5.661095997323841" />
+      <entry key="W1" value="9.145324958258039" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.897611319722135" />
+      <entry key="MS500" value="2.0236333870842547" />
+      <entry key="S2" value="5.770194038860614" />
+      <entry key="S5" value="8.300036317224881" />
+      <entry key="S10" value="9.519705574041845" />
+      <entry key="S30" value="10.629061286505552" />
+      <entry key="S60" value="11.563426450753411" />
+      <entry key="M2" value="14.987787633869056" />
+      <entry key="M5" value="24.588002611269932" />
+      <entry key="M10" value="32.08476116597756" />
+      <entry key="M15" value="35.78434567085803" />
+      <entry key="M30" value="42.8786256872251" />
+      <entry key="H1" value="54.804598207406514" />
+      <entry key="H2" value="71.98424569161536" />
+      <entry key="H4" value="90.90406873737972" />
+      <entry key="D1" value="161.27537434048838" />
+      <entry key="W1" value="217.88106245252297" />
+    </decayedShown>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3K1KHuIkn9EH4HLuD6I4f4Z32Ur" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.index.html.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Node.js.app.js.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "lab6",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/valer/Web-boilerplate/src",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.stylelint": "C:\\Users\\valer\\Web-boilerplate\\node_modules\\stylelint",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\valer\\Web-boilerplate\\node_modules\\typescript\\lib"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\valer\Web-boilerplate\src" />
+      <recent name="C:\Users\valer\Web-boilerplate\src\logic" />
+      <recent name="C:\Users\valer\Web-boilerplate\components" />
+      <recent name="C:\Users\valer\Web-boilerplate" />
+      <recent name="C:\Users\valer\Web-boilerplate\src\js" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\valer\Web-boilerplate" />
+      <recent name="C:\Users\valer\Web-boilerplate\src" />
+      <recent name="C:\Users\valer\Web-boilerplate\src\data" />
+      <recent name="C:\Users\valer\Web-boilerplate\src\scss" />
+      <recent name="C:\Users\valer\Web-boilerplate\src\logic" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Web-boilerplate/src/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.index.html" />
+        <item itemvalue="JavaScript Debug.index.html" />
+        <item itemvalue="JavaScript Debug.index.html" />
+        <item itemvalue="JavaScript Debug.index.html" />
+        <item itemvalue="JavaScript Debug.index.html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.9437.185" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0126327e-cdf5-418f-a38b-6662183bc7d1" name="Changes" comment="" />
+      <created>1790719550105</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1790719550105</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add findUser function to search for User objects by name, note, or age" />
+    <MESSAGE value="add age comparison operators to findUser function for flexible age filtering" />
+    <MESSAGE value="add getMatchPercentage function to calculate percentage of matching user objects" />
+    <MESSAGE value="add normalization functions for user attributes and validation logic for user data" />
+    <MESSAGE value="add normalization functions and merge logic for user data processing" />
+    <MESSAGE value="refactor user normalization logic and remove unused mappers" />
+    <MESSAGE value="update normalizeDate function to return full ISO date format" />
+    <MESSAGE value="add user data processing functions for filtering, sorting, finding, and validation" />
+    <MESSAGE value="update user data output format and enhance validation logging" />
+    <MESSAGE value="refactor project structure and migrate to TypeScript; remove unused files and add user data processing utilities" />
+    <MESSAGE value="add initial implementation of teacher management app with filtering, sorting, and modal details" />
+    <MESSAGE value="enhance AddTeacherModal with additional fields and validation; update user construction logic" />
+    <MESSAGE value="add db.json for teacher data and configure json-server; update Vite server proxy settings" />
+    <MESSAGE value="add randomUserApi module for fetching random users and posting teacher data" />
+    <MESSAGE value="add Pagination and StatisticsPanel components for user data navigation and statistics display" />
+    <MESSAGE value="enhance AddTeacherModal and App components with async submission, error handling, and pagination support" />
+    <MESSAGE value="enhance user validation logic with improved email and phone validation, and enforce required fields" />
+    <MESSAGE value="add fetchValidUsers function to retrieve and validate users from random API with retry logic" />
+    <MESSAGE value="refactor user fetching logic to validate users before loading; replace fetchRandomUsers with fetchValidUsers" />
+    <MESSAGE value="refactor user fetching logic to use fetchValidUsers for improved validation and error handling" />
+    <MESSAGE value="refactor formatUsers function to improve user validation and remove unused identity logic" />
+    <MESSAGE value="refactor formatUsers to streamline user validation and remove unused additional user normalization" />
+    <MESSAGE value="feat: add new components and update styles for Teacherinder platform&#10;- Introduced Footer, Header, AboutSection, FavoritesSection, StatisticsSection, and TeachersSection components.&#10;- Enhanced TeacherCard and TeacherTable for better user interaction.&#10;- Updated styles across various SCSS files for improved layout and responsiveness.&#10;- Added new utility functions for user data handling." />
+    <MESSAGE value="feat: refactor statistics components and integrate charts for user data visualization" />
+    <MESSAGE value="feat: remove TeacherTable component and associated logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: remove TeacherTable component and associated logic" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
